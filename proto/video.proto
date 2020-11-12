@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package protocol;
+
+// Must stay in sync with FrameType that is used by Frame
+enum FrameType {
+    AUDIO = 0;
+    VIDEO_IDR = 1;
+    VIDEO_I = 2;
+    VIDEO_P = 3;
+    VIDEO_B = 4;
+    AUDIO_C = 5;
+    VIDEO_C = 6;
+}
+
+enum Orientation {
+    rotate0 = 0;
+    rotate90 = 90;
+    rotate180 = 180;
+    rotate270 = 270;
+}
+
+message Frame {
+    FrameType frameType = 1;
+    uint32 sequenceID = 2;
+    uint32 timestampHi = 3;
+    uint32 timestampLo = 4;
+    uint32 uid = 5;
+    repeated bytes layers = 6;
+    Orientation orientation = 7;
+}
+
+message VideoStreamParameters {
+    uint32 version = 1;
+    bool isCamEnabled = 2;
+    bool isMicEnabled = 3;
+    uint32 width = 4;
+    uint32 height = 5;
+    repeated string codecs = 6;
+    bytes ratchet = 7;
+}

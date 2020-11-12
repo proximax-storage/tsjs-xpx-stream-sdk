@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package protocol;
+
+// internal messages
+message AnnouncementMessage {
+    string identity = 1;
+    string nodeIdentity = 2;
+    uint64 expires = 3;
+    bytes key = 4;
+    repeated string address = 5;
+    bytes fingerprint = 6;
+    bytes handshake = 7;
+}
+
+message PresenceRequest {
+    bytes clientPK = 1;
+    bytes encryptedBlob = 2;
+}
+
+// events
+
+message AnnouncePresence {
+    bytes request = 1;
+    bytes key = 2;
+}
+
+message AnnouncementResult {
+    enum resultType {
+        success = 0;
+        formatError = 1;
+        expirationInvalid = 2;
+        signatureInvalid = 3;
+        internalError = 4;
+        alreadyRegistered = 5;
+    }
+
+    resultType result = 1;
+}
+
+message LookupPresence {
+    string identity = 1;
+}
+
+message LookupResult {
+    enum resultType {
+        success = 0;
+        notFound = 1;
+        failure = 2;
+    }
+    
+    string identity = 1;
+    resultType result = 2;
+    repeated bytes announcements = 3;
+}
+
+message ForwardPresenceRequest {
+    bytes request = 1;
+}
+
+message ForwardPresenceRequestResult {
+    enum resultType {
+        success = 0;
+        notFound = 1;
+        notAllowed = 2;
+        internalError = 3;
+    }
+
+    string identity = 1;
+    resultType result = 2;
+}

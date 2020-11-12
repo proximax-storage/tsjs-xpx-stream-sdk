@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package protocol;
+
+// internal messages
+message DiscoveryItem {
+    string version = 1;
+    string identity = 2;
+    string fingerprint = 3;
+    string handshake = 4;
+    string mode = 5;
+    repeated string address = 6;
+    uint64 expiration = 7;
+}
+
+message DiscoveryListing {
+    string version = 1;
+    repeated bytes items = 2;
+    uint64 creation = 3;
+    uint64 expiration = 4;
+}
+
+message DiscoverySignature {
+    bytes certificate = 1;
+    bytes signature = 2;
+}
+
+// packets sent by all clients
+message PublishToDiscovery {
+    string version = 1;
+    bytes signedDiscoveryItem = 2;
+}
+
+message PullDiscovery {
+    string version = 1;
+}
+
+message DiscoveryDirectory {
+    bytes directory = 1;
+    repeated DiscoverySignature signatures = 2;
+}
+
+// internal raft packets only sent between discovery nodes 
+message DiscoveryRaftPacket {
+    string version = 1;
+    
+    enum raftMsgType {
+        appendEntriesRequest = 0;
+        requestVoteRequest = 1;
+        installSnapshotRequest = 2;
+        appendEntriesResponse = 3;
+        requestVoteResponse = 4;
+        installSnapshotResponse = 5;
+    } 
+
+    string sourceID = 3;
+    string desitnationID = 4;
+    raftMsgType msgType = 5;
+
+    uint64 packetID = 6;
+    bytes packet = 7;
+}
+
+// discovery specific data stored in the replicated raft instance logs
+message RaftLogSignatureEntry {
+    DiscoverySignature signature = 1;
+    uint64 expiration = 2;
+}
+
+message RaftLogEntry {
+	bytes packet = 1;
+	repeated RaftLogSignatureEntry signatures = 2;
+    uint64 deleteIndex = 3;
+}
+
+message DiscoveryRequestConsensusVote {
+    string version = 1;
+    uint64 creation = 2;
+    uint64 expiration = 3;
+}
+
+message DiscoveryConsensusVote {
+    string version = 1;
+    DiscoverySignature signature = 2;
+}
+
+message DiscoveryFinalConsensus {
+    string version = 1;
+    repeated DiscoverySignature signatures = 2;
+}
+
+message PublishToDiscoveryForwarded {
+    string version = 1;
+    string fingerprint = 2;
+    bytes publishPacket = 3;
+    DiscoverySignature signature = 4;
+}

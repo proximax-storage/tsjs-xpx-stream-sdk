@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package protocol;
+
+message AuthRequestCertificate {
+    bytes certificateStub = 1;
+}
+
+message AuthRequestCertificateResult {
+    enum requestResult {
+        success = 0;
+        formatError = 1;
+        unsupportedVersion = 2;
+        signatureInvalid = 3;
+        internalError = 4;
+    }
+
+    requestResult result = 1;
+    bytes signature = 2;
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sirius Stream Chat app</title>
+    <link rel="stylesheet" type="text/css" href="client/style.css" >
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="client/index.js"></script>
+
+</head>
+<body>
+<header>
+    <h1>Secured Private Chat</h1>
+</header>
+
+<section>
+    <div id="change_username">
+        <button id="init" onclick="initialize()">Initialize</button>
+        <button id="register" onclick="register()">Register</button>
+        <button id="login" onclick="login()">Login</button>
+        <button id="chat" onclick="chat()">Chat with User</button>
+    </div>
+</section>
+
+<section id="chatroom">
+    <section id="feedback"></section>
+</section>
+
+<section id="input_zone">
+    <input id="message" class="vertical-align" type="text" />
+    <button id="send_message" class="vertical-align" type="button" onclick="sendMessage()">Send</button>
+</section>
+
+</body>
+</html>

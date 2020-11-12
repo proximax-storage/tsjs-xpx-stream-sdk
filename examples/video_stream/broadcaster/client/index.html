@@ -1,0 +1,20 @@
+<html>
+<head>
+    <title>Client</title>
+</head>
+<body>
+
+    <script src="client/HighResolutionClock.js"></script>
+    <script src="client/cpp_high_resolution_clock.js"></script>
+    <script src="client/serializer.js"></script>
+
+    <video autoplay style="display: none"></video> <!-- hide -->
+    <canvas id="preview" ></canvas>
+
+    <script src="client/index.js"></script>
+
+<button onclick="start()"> Start streaming! </button>
+<button onclick="initAudio()">Stream Audio</button>
+<div id="tokenid"></div>
+</body>
+</html>
