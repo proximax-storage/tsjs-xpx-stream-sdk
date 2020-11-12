@@ -62,5 +62,5 @@ Licensed under the [Apache License 2.0](LICENSE)
 [self]: https://github.com/proximax-storage/tsjs-xpx-stream-sdk
 [issues]: https://github.com/proximax-storage/tsjs-xpx-stream-sdk/issues
 [wiki]: https://github.com/proximax-storage/tsjs-xpx-stream-sdk/wiki
-[examples]: https://github.com/proximax-storage/tsjs-xpx-stream-sdk/wiki/Examples
+[examples]: https://github.com/proximax-storage/tsjs-xpx-stream-sdk/tree/master/examples
 
