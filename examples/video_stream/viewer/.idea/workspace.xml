@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a5c3ae3c-130d-403d-a5a9-c73d121dd02d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/client/audioClientWorker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/framerater.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/sirius-stream-client/AudioPacket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/sirius-stream-client/DecodePacketManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/sirius-stream-client/HighResolutionClock.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/sirius-stream-client/HighResolutionClock.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/sirius-stream-client/RingBuffer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/sirius-stream-client/TimeKeeper.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/sirius-stream-client/VideoFrameRater.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/clientWorker.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/clientWorker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1idghAJmqCwkXZbG1k9QWElLhXK" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="NodeJSConfigurationType" path-to-js-file="index.js" working-dir="$PROJECT_DIR$/server">
+      <method v="2" />
+    </configuration>
+    <configuration name="index.js" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="index.js" working-dir="$PROJECT_DIR$/server">
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a5c3ae3c-130d-403d-a5a9-c73d121dd02d" name="Default Changelist" comment="" />
+      <created>1602243000372</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1602243000372</updated>
+      <workItem from="1602243001895" duration="16000" />
+      <workItem from="1602408153145" duration="8000" />
+      <workItem from="1602500700722" duration="647000" />
+      <workItem from="1602566216949" duration="3415000" />
+      <workItem from="1602670059877" duration="168000" />
+      <workItem from="1602814781609" duration="35000" />
+      <workItem from="1603102848941" duration="162000" />
+      <workItem from="1603191283005" duration="339000" />
+      <workItem from="1603205060015" duration="262000" />
+      <workItem from="1603205510133" duration="1410000" />
+      <workItem from="1603210047368" duration="31000" />
+      <workItem from="1603210471784" duration="15000" />
+      <workItem from="1603251315989" duration="22000" />
+      <workItem from="1603254548998" duration="4622000" />
+      <workItem from="1603347014401" duration="590000" />
+      <workItem from="1603355735148" duration="69000" />
+      <workItem from="1603361535400" duration="246000" />
+      <workItem from="1603361916907" duration="4000" />
+      <workItem from="1603422243956" duration="4529000" />
+      <workItem from="1603437736041" duration="24000" />
+      <workItem from="1603679081879" duration="843000" />
+      <workItem from="1603693270039" duration="31000" />
+      <workItem from="1603708612110" duration="67000" />
+      <workItem from="1603720862534" duration="1323000" />
+      <workItem from="1604046822521" duration="29000" />
+      <workItem from="1604050985627" duration="23000" />
+      <workItem from="1604051323632" duration="29000" />
+      <workItem from="1604472039028" duration="15999000" />
+      <workItem from="1604501629794" duration="1449000" />
+      <workItem from="1604505260415" duration="454000" />
+      <workItem from="1604554587952" duration="2244000" />
+      <workItem from="1604558082556" duration="46000" />
+      <workItem from="1604558152486" duration="1148000" />
+      <workItem from="1604560177554" duration="7078000" />
+      <workItem from="1604567868810" duration="4914000" />
+      <workItem from="1604587491856" duration="4063000" />
+      <workItem from="1604592254083" duration="3102000" />
+      <workItem from="1604627555333" duration="8650000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="304" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602568066589">
+      <screen x="0" y="23" width="1680" height="986" />
+    </state>
+    <state x="304" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1680.986@0.23.1680.986" timestamp="1602568066589" />
+    <state width="1070" height="466" key="DebuggerActiveHint" timestamp="1604482601585">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1070" height="466" key="DebuggerActiveHint/0.23.1680.988@0.23.1680.988" timestamp="1604482601585" />
+    <state width="1659" height="385" key="GridCell.Tab.0.bottom" timestamp="1604638977349">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.0.bottom/0.23.1680.986@0.23.1680.986" timestamp="1602670286905" />
+    <state width="1659" height="385" key="GridCell.Tab.0.bottom/0.23.1680.988@0.23.1680.988" timestamp="1604638977349" />
+    <state width="1659" height="385" key="GridCell.Tab.0.center" timestamp="1604638977348">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.0.center/0.23.1680.986@0.23.1680.986" timestamp="1602670286903" />
+    <state width="1659" height="385" key="GridCell.Tab.0.center/0.23.1680.988@0.23.1680.988" timestamp="1604638977348" />
+    <state width="1659" height="385" key="GridCell.Tab.0.left" timestamp="1604638977348">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.0.left/0.23.1680.986@0.23.1680.986" timestamp="1602670286902" />
+    <state width="1659" height="385" key="GridCell.Tab.0.left/0.23.1680.988@0.23.1680.988" timestamp="1604638977348" />
+    <state width="1659" height="385" key="GridCell.Tab.0.right" timestamp="1604638977349">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.0.right/0.23.1680.986@0.23.1680.986" timestamp="1602670286904" />
+    <state width="1659" height="385" key="GridCell.Tab.0.right/0.23.1680.988@0.23.1680.988" timestamp="1604638977349" />
+    <state width="1659" height="329" key="GridCell.Tab.1.bottom" timestamp="1604567622373">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.1.bottom/0.23.1680.986@0.23.1680.986" timestamp="1602670286909" />
+    <state width="1659" height="329" key="GridCell.Tab.1.bottom/0.23.1680.988@0.23.1680.988" timestamp="1604567622373" />
+    <state width="1659" height="329" key="GridCell.Tab.1.center" timestamp="1604567622372">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.1.center/0.23.1680.986@0.23.1680.986" timestamp="1602670286907" />
+    <state width="1659" height="329" key="GridCell.Tab.1.center/0.23.1680.988@0.23.1680.988" timestamp="1604567622372" />
+    <state width="1659" height="329" key="GridCell.Tab.1.left" timestamp="1604567622372">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.1.left/0.23.1680.986@0.23.1680.986" timestamp="1602670286906" />
+    <state width="1659" height="329" key="GridCell.Tab.1.left/0.23.1680.988@0.23.1680.988" timestamp="1604567622372" />
+    <state width="1659" height="329" key="GridCell.Tab.1.right" timestamp="1604567622373">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.1.right/0.23.1680.986@0.23.1680.986" timestamp="1602670286908" />
+    <state width="1659" height="329" key="GridCell.Tab.1.right/0.23.1680.988@0.23.1680.988" timestamp="1604567622373" />
+    <state width="1659" height="329" key="GridCell.Tab.2.bottom" timestamp="1604567622375">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.2.bottom/0.23.1680.986@0.23.1680.986" timestamp="1602670286913" />
+    <state width="1659" height="329" key="GridCell.Tab.2.bottom/0.23.1680.988@0.23.1680.988" timestamp="1604567622375" />
+    <state width="1659" height="329" key="GridCell.Tab.2.center" timestamp="1604567622374">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.2.center/0.23.1680.986@0.23.1680.986" timestamp="1602670286911" />
+    <state width="1659" height="329" key="GridCell.Tab.2.center/0.23.1680.988@0.23.1680.988" timestamp="1604567622374" />
+    <state width="1659" height="329" key="GridCell.Tab.2.left" timestamp="1604567622374">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.2.left/0.23.1680.986@0.23.1680.986" timestamp="1602670286910" />
+    <state width="1659" height="329" key="GridCell.Tab.2.left/0.23.1680.988@0.23.1680.988" timestamp="1604567622374" />
+    <state width="1659" height="329" key="GridCell.Tab.2.right" timestamp="1604567622374">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.2.right/0.23.1680.986@0.23.1680.986" timestamp="1602670286912" />
+    <state width="1659" height="329" key="GridCell.Tab.2.right/0.23.1680.988@0.23.1680.988" timestamp="1604567622374" />
+    <state width="1659" height="329" key="GridCell.Tab.3.bottom" timestamp="1604567622376">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.3.bottom/0.23.1680.986@0.23.1680.986" timestamp="1602670286917" />
+    <state width="1659" height="329" key="GridCell.Tab.3.bottom/0.23.1680.988@0.23.1680.988" timestamp="1604567622376" />
+    <state width="1659" height="329" key="GridCell.Tab.3.center" timestamp="1604567622376">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.3.center/0.23.1680.986@0.23.1680.986" timestamp="1602670286915" />
+    <state width="1659" height="329" key="GridCell.Tab.3.center/0.23.1680.988@0.23.1680.988" timestamp="1604567622376" />
+    <state width="1659" height="329" key="GridCell.Tab.3.left" timestamp="1604567622375">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.3.left/0.23.1680.986@0.23.1680.986" timestamp="1602670286914" />
+    <state width="1659" height="329" key="GridCell.Tab.3.left/0.23.1680.988@0.23.1680.988" timestamp="1604567622375" />
+    <state width="1659" height="329" key="GridCell.Tab.3.right" timestamp="1604567622376">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state width="1659" height="329" key="GridCell.Tab.3.right/0.23.1680.986@0.23.1680.986" timestamp="1602670286916" />
+    <state width="1659" height="329" key="GridCell.Tab.3.right/0.23.1680.988@0.23.1680.988" timestamp="1604567622376" />
+    <state x="380" y="253" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1603264986677">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state x="380" y="253" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.23.1680.988@0.23.1680.988" timestamp="1603264986677" />
+    <state x="538" y="272" width="604" height="490" key="find.popup" timestamp="1604561645873">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state x="538" y="272" width="604" height="490" key="find.popup/0.23.1680.988@0.23.1680.988" timestamp="1604561645873" />
+    <state x="505" y="168" width="670" height="676" key="search.everywhere.popup" timestamp="1604595294378">
+      <screen x="0" y="23" width="1680" height="988" />
+    </state>
+    <state x="505" y="168" width="670" height="676" key="search.everywhere.popup/0.23.1680.988@0.23.1680.988" timestamp="1604595294378" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint type="javascript">
+          <url>file://$PROJECT_DIR$/server/node_modules/sirius-stream-sdk/dist/src/routing/video/VideoStream.js</url>
+          <line>77</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint type="javascript">
+          <url>file://$PROJECT_DIR$/server/node_modules/sirius-stream-sdk/dist/src/routing/video/VideoStream.js</url>
+          <line>148</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint type="javascript">
+          <url>file://$PROJECT_DIR$/../sirius-stream-ts-sdk/dist/src/routing/video/ViewerManager.js</url>
+          <line>26</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/server/node_modules/sirius-stream-sdk/src/media/SoundBuf.ts</url>
+          <line>46</line>
+          <option name="timeStamp" value="29" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/client/sirius-stream-client/HighResolutionClock.js</url>
+          <line>2</line>
+          <option name="timeStamp" value="30" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
