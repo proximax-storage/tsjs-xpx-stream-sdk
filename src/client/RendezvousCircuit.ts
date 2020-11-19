@@ -29,11 +29,11 @@ export class RendezvousCircuit {
      * Callback handlers
      * no setters and getters and accessed directly
      * */
-    private OnRawData : (data : Buffer) => void = null;
-    private OnReceivedUserDataRaw : (data : Uint8Array) => void = null;
-    private OnReceivedUserDataString : (data : string) => void = null;
-    private OnConfirmedChannel : () => void = null;
-    private OnDeniedChannel : () => void = null;
+    public OnRawData : (data : Buffer) => void = null;
+    public OnReceivedUserDataRaw : (data : Uint8Array) => void = null;
+    public OnReceivedUserDataString : (data : string) => void = null;
+    public OnConfirmedChannel : () => void = null;
+    public OnDeniedChannel : () => void = null;
 
     constructor(circuit : Circuit, circuitHandler : RvCircuitHandler) {
         this.circuit = circuit;
