@@ -13,7 +13,7 @@ import {RVCircuitInitiator} from "./RVCircuitInitiator";
 import {Identity} from "../pki/Identity";
 import {EncryptedInfoPayload} from "./RvEncryptedInfo";
 import {extractHostAndIP} from "../utils/AddressExtractor";
-import {LinkSpec, newLinkSpecHostname} from "../routing/LinkSpec";
+import {LinkSpec, LinkSpecType, newLinkSpecHostname, newLinkSpecIdentity} from "../routing/LinkSpec";
 import {newSignedMessage} from "../cert/Mesage";
 import {SignedEd25519KeyPair} from "../cert/KeyPair";
 import * as client from "../../proto/out/client";
@@ -212,9 +212,10 @@ export class Rendezvous {
         // to resolve the DNS name before sending it towards node for both this payload and EXTEND cell
         // thus retire the hostname linkspec entirely. Remember - hostname linkspec is non-standard
         // and we introduced it ONLY because we needed it for Docker local setup to work
-        var host = extractHostAndIP(lastNode.OnionAddress[0]);
-        epayload.linkSpecs = new Array<LinkSpec>(1);
-        epayload.linkSpecs[0] = newLinkSpecHostname(host.host, host.port);
+        var host = extractHostAndIP(this.routes[2].OnionAddress[0]);
+        epayload.linkSpecs = new Array<LinkSpec>(2);
+        epayload.linkSpecs[0] = newLinkSpecIdentity(LinkSpecType.identity, epayload.Fingerprint);
+        epayload.linkSpecs[1] = newLinkSpecHostname(host.host, host.port);
 
         let ep = epayload.marshal();
         if(ep == null) {

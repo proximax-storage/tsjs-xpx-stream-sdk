@@ -92,6 +92,7 @@ export const HandshakeTypeDefault = 1;
  * All the supported relay commands
  * */
 export const RelayCommandType = Object.freeze({
+        RelayUserData               : 0,
         RelayExtend                 : 1,
         RelayExtended               : 2,
         RelayEscape                 : 3,

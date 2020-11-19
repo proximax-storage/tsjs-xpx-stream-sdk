@@ -178,12 +178,12 @@ export class Circuit {
     }
 
     extendLinkSpec(linkSpecs : Array<LinkSpec>, newEndPoint : NodePublicIdentity) {
-        let naddr = linkSpecs[0].hostName();
 
+        let naddr = newEndPoint.OnionAddress[0];
         Log("Extending circuit to the node " + naddr);
 
         if(this.hops.length == 0)
-            throw("Misssing First Hop, cannot Extend circuit");
+            throw("Missing First Hop, cannot Extend circuit");
 
         let lastHop = this.hops[this.hops.length-1];
         let lastHopNo = this.hops.length-1;

@@ -12,6 +12,6 @@
     "express": "^4.17.1",
     "expressjs": "^1.0.1",
     "socket.io": "^2.0.4",
-    "sirius-stream-sdk": "0.0.1"
+    "tsjs-xpx-stream-sdk": "0.1.0"
   }
 }

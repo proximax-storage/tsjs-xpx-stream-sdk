@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package protocol;
+
+enum MessageType {
+    Raw = 0;
+    String = 1;
+    ConfirmChannel = 2;
+    DenyChannel = 3;
+    ShareStream = 4;
+    RequestStream = 5;
+    ConfirmStreamRequest = 6;
+    DenyStreamRequest = 7;
+    ConfirmStreamShare = 8;
+    DenyStreamShare = 9;
+    StopStreamView = 10;
+}
+
+message ChannelMessage {
+    MessageType messageType = 1;
+    bytes data = 2;
+}
+
+message RawMessage { bytes data = 1; }
+
+message StringMessage { string data = 1; }
+
+message ConfirmChannelMessage {}
+
+message DenyChannelMessage {}
+
+message ShareStreamMessage { string streamID = 1; }
+
+message RequestStreamMessage {}
+
+message ConfirmVideoStreamRequestMessage { string streamID = 1; }
+
+message DenyVideoStreamRequestMessage {}
+
+message ConfirmVideoStreamShareMessage { string streamID = 1; }
+
+message DenyVideoStreamShareMessage {}
+
+message StopVideoStreamViewMessage {}

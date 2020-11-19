@@ -22,7 +22,7 @@ socket.on('registration_complete', (data) => {
 socket.on('login_result', (data) => {
     logged_in = (data.status);
     let status = (logged_in)? "Success" : "Fail";
-    appendToMessage("Login status : "+ status + ": " + data.message+"...");
+    appendToMessage("Login status : "+ status + " :     " + data.message+"   ...");
 });
 
 socket.on('channel_created', (data) => {
@@ -31,12 +31,32 @@ socket.on('channel_created', (data) => {
 });
 
 socket.on('chat_invite', (data) => {
-    appendToMessage("chat invited by "+ data.inviter +"...");
+    var r = confirm("Channel Initiated with user " +  data.inviter + "\nConfirm communication?");
+    if (r == true) {
+        socket.emit('confirm_channel', true);
+        appendToMessage("You can now start sending messages to  "+ data.inviter + "...");
+    } else {
+        socket.emit('confirm_channel', false);
+        appendToMessage("Connection to  "+ data.inviter + " denied by you ...");
+    }
 });
 
-socket.on('message_received', (data) =>{
-    appendToMessage(chat_mate + " : " + data.message);
+socket.on('on_user_msg_str', (data) =>{
+    appendToMessage(chat_mate + " (as user data) : " + data.message);
 });
+
+socket.on('on_raw_data', (data) =>{
+    let msg = String.fromCharCode.apply(String, data.data);
+    appendToMessage(chat_mate + " (as raw data) : " + msg);
+});
+
+
+socket.on('channel_invite_result', (data) => {
+    if(data.result)
+        appendToMessage("Channel confirmed! You can now start sending messages to  "+ data.userID + " ...");
+    else
+        appendToMessage("Channel connection denied by"+ data.userID + " ...");
+})
 
 function initialize() {
     socket.emit('initialize', "");
@@ -74,14 +94,28 @@ function chat() {
     });
 }
 
-function sendMessage() {
+function sendUserDataMessage() {
 
     let input = document.getElementById("message");
     let message = input.value;
 
-    appendToMessage("me : "+ message);
+    appendToMessage("me (as user data messag) : "+ message);
 
-    socket.emit('message', {
+    socket.emit('user_message_str', {
+        message: message
+    });
+
+    input.value = '';
+}
+
+function sendRawMessage() {
+
+    let input = document.getElementById("message");
+    let message = input.value;
+
+    appendToMessage("me (as raw message) : "+ message);
+
+    socket.emit('raw_message', {
         message: message
     });
 

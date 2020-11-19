@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "tsjs-xpx-stream-sdk": "0.0.1",
+    "tsjs-xpx-stream-sdk": "0.1.0",
     "ws": "^7.3.1"
   }
 }

@@ -66,7 +66,7 @@ export function newLinkSpecHostname(hostname : string, port: number) : LinkSpec 
 
 export function newLinkSpecIdentity(ltype : number, id : Buffer) : LinkSpec {
     let s = new LinkSpec(ltype);
-    s.Spec = id;
+    s.Spec = id.slice();
 
     if(id.length != FingerprintSize && ltype == LinkSpecType.identity) {
         throw("Unable to create identity link spec: invalid size");
