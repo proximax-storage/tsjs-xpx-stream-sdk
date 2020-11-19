@@ -22,11 +22,6 @@ The official ProximaX Stream SDK for TypeScript and JavaScript.
 
 The release notes for the tsjs-xpx-chain-sdk can be found [here](CHANGELOG.md).
 
-## Todo
-This release lacks the following feature
-1. Permission based private chat. 
-2. Permission based stream viewing.
-
 ## Changelog
 
 Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
