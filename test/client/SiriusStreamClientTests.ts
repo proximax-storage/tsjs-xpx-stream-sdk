@@ -4,16 +4,16 @@ describe('Sirius Stream Client test', () => {
     it('can register user', () => {
         var config = {
             "bootstrap" : [{
-                "fingerprint" : "15BD35F29D087DC1E33F5E4B2A0C7551C8212A506CBB1E946D299F7CFE892578",
+                "fingerprint" : "39F55A3B00FB4E372553ABCB9763680EEF7A85CF49A12335B740C86D95CE7DBA",
                 "address" : "discovery1",
                 "port" : 6001,
-                "identity" : "psp.discovery.node.2h2CF1JrVkbYFn2ynq5atK4FV6kRLepHEZFMLmAxRAjQzm9AJX"
+                "identity" : "xpx.discovery.node.6r7hhn9em5jT7FMX1XUdT3rmzvLR9anrfeCPwDy9CNnfvgUrR"
                 },
                 {
-                "fingerprint" : "BCB322D1626F75C06AA1BD31536EEA84CDAC7232F1CC7851A31AED57713BDF6B",
+                "fingerprint" : "5AD8CEBB10D0521274FFC202A3D356DFD86453C0A12E2F02C2BE087A842CCD53",
                 "address" : "discovery5",
                 "port" : 6005,
-                "identity" : "psp.discovery.node.2Hz7aA5MJ3BXHM3UFYvZZjuZJgzcapApqAkLHcq6VSzHLRGiM5"
+                "identity" : "xpx.discovery.node.9H8hXQ31pM9YWRBgi2ahn3X2hdSuVrWR78iJ2eo1SwWhktjgt"
                 }
                 ],
             "hops" : {
@@ -36,7 +36,7 @@ describe('Sirius Stream Client test', () => {
        };
 
        client.OnLoginSucees =(presenceKey)=>{
-         //  var userId = "peerstream.client.account.MVtLwMU3E7JydgTZnKrfmrMM146nKS32cYcmjtqN5zTxkqfGr";
+         //  var userId = "sirius.client.account.MVtLwMU3E7JydgTZnKrfmrMM146nKS32cYcmjtqN5zTxkqfGr";
          //  client.createChannel(userId, null);
        };
     })

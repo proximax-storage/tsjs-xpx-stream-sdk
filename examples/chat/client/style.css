@@ -64,19 +64,13 @@ input#username {
 
 input#message {
     display: inline-block;
-    width: 78%;
+    width: 88%;
     height: 70%;
     font-family: 'Comfortaa', sans-serif;
     font-size: 2vh;
 }
 
 button#send_message {
-    display: inline-block;
-    height: 70%;
-    width: 10%;
-}
-
-button#send_raw_message {
     display: inline-block;
     height: 70%;
     width: 10%;

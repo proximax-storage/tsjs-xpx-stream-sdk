@@ -11,7 +11,7 @@ import hkdf = require("futoin-hkdf");
 import {circuitKeySize} from "../routing/circuit/CircuitCrypto";
 export const 	HSHashSize            = 32;
 export const    HSStreamCipherKeySize = 16;
-export const    HSHandshakeProtoID    = "psp-hs-curve25519-sha256-01";
+export const    HSHandshakeProtoID    = "xpx-hs-curve25519-sha256-01";
 export const    HSHandshakeKey        = HSHandshakeProtoID + ":hs_key_extract";
 export const 	HSHandshakeExpand     = HSHandshakeProtoID + ":hs_key_expand";
 export const    HSHandshakeAuthSuffix = ":server";

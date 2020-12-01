@@ -6,7 +6,7 @@ import * as bs58 from "../../src/3rd-party/bs58";
 
 describe('Identity tests', () => {
     it('should generate sha256 checksum', () => {
-        var checksum256 = checksum("psp.auth.node.F0857E431621430D5912F8831D3670505F7D1267BE1CCE32CB04E8C45405A063");
+        var checksum256 = checksum("xpx.auth.node.F0857E431621430D5912F8831D3670505F7D1267BE1CCE32CB04E8C45405A063");
         var expected = [
             110, 65, 71, 249
         ];

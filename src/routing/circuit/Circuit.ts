@@ -179,7 +179,7 @@ export class Circuit {
 
     extendLinkSpec(linkSpecs : Array<LinkSpec>, newEndPoint : NodePublicIdentity) {
 
-        let naddr = newEndPoint.OnionAddress[0];
+        let naddr = linkSpecs[0].hostName();
         Log("Extending circuit to the node " + naddr);
 
         if(this.hops.length == 0)

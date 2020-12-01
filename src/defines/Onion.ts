@@ -14,7 +14,7 @@ export const NodeIdentityKeySize = 1024;
  */
 export const MaxVariableRelayDataLength = 65535;
 
-export const HandshakeProtoID = "psp-curve25519-sha256-01"
+export const HandshakeProtoID = "xpx-curve25519-sha256-01"
 export const HandshakeVerify  = HandshakeProtoID + ":verify"
 export const HandshakeAuthSuffix = ":server";
 export const HandshakeMac = HandshakeProtoID + ":mac";
