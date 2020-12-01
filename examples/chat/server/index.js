@@ -92,13 +92,14 @@ io.on('connection', (client) => {
                  * On creation of channel, user can already communicate by sending raw data, therefore we also
                  * setup path ways for communiation so it can be displayed in frontend
                  * */
-                setUpRawCommunication(circuit);
+                setUpRawCommunication(circuit, client);
             });
     });
 
     client.on('connect_to_user', (data) => {
         siriusStream.createChannel(data.userID, null, (circ, userId)=>{
             circuit = circ;
+            circuit.UsingRawData = false;
             client.emit("channel_created", {
                 userID : userId
             });
@@ -106,7 +107,7 @@ io.on('connection', (client) => {
             /**
              * open raw channel communication to frontend as well
              * */
-            setUpRawCommunication(circuit);
+            setUpRawCommunication(circuit, client);
 
             /**
              * Since user sent the invite, we listen to event if user approved or denied the request
@@ -117,7 +118,7 @@ io.on('connection', (client) => {
                     result : true
                 });
 
-                setUpCircuit(circuit);
+                setUpCircuit(circuit, client);
             };
 
             circuit.OnDeniedChannel = ()=> {
@@ -150,7 +151,7 @@ io.on('connection', (client) => {
         if(response) {
             circuit.confirmChannel();
 
-            setUpCircuit(circuit);
+            setUpCircuit(circuit, client);
         }
         else {
             circuit.denyChannel();
@@ -176,7 +177,7 @@ app.get('/client/style.css',function(req,res){
 app.use(express.static('public'));
 
 
-function setUpCircuit(circuit) {
+function setUpCircuit(circuit, client) {
     circuit.OnReceivedUserDataString = (message)=>{
         client.emit("on_user_msg_str", {
             message : message
@@ -188,7 +189,7 @@ function setUpCircuit(circuit) {
     };
 }
 
-function setUpRawCommunication(circuit) {
+function setUpRawCommunication(circuit, client) {
     circuit.OnRawData = (data) =>{
         client.emit("on_raw_data", {
             data : data
