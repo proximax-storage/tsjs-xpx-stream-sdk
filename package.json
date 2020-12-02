@@ -17,7 +17,7 @@
   "scripts": {
     "pretest": "npm run build",
     "test": "mocha --ui bdd --recursive ./dist/test --timeout 90000",
-    "build": "rm -rf dist/ && tsc && cp src/3rd-party/cpp_high_resolution_clock/*.wasm dist/src/3rd-party/cpp_high_resolution_clock/",
+    "build": "tsc",
     "prepublish": "npm run build"
   },
   "dependencies": {
