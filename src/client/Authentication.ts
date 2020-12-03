@@ -96,7 +96,7 @@ export class Authentication {
             let signingKey = ed25519.generateKeyPair();
 
             // @ts-ignore
-            let pkiIdentity = buildIdentity("peerstream", "client", IdentityType.Account, masterKey.publicKey);
+            let pkiIdentity = buildIdentity("sirius", "client", IdentityType.Account, masterKey.publicKey);
 
             // @ts-ignore
             let stub = newFlatCertificate(signingKey.publicKey, pkiIdentity, certificateLifetime, masterKey.privateKey);
@@ -110,7 +110,7 @@ export class Authentication {
             this.CachedCertificate = kp;
         }
 
-        let msgb = Buffer.from(stringToAsciiByteArray("psp-auth-1.0"));
+        let msgb = Buffer.from(stringToAsciiByteArray("xpx-auth-1.0"));
         let sm = newSignedMessage(msgb, this.CachedCertificate);
         let authMsg = new AuthRequestCertificate();
         authMsg.certificateStub = sm.marshal();

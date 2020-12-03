@@ -14,7 +14,7 @@ import * as forge from "node-forge";
 
 export const hmacLen = 32;
 export const ratchatLen =  hmacLen * 4;
-export const ratchetProtoID = "psp-megolm-01";
+export const ratchetProtoID = "xpx-megolm-01";
 export const ratchetExpand  = ratchetProtoID + ":key_expand";
 
 const megolmRatchetParts = 4;

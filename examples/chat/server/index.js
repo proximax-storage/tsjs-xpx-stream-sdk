@@ -199,35 +199,36 @@ function setUpRawCommunication(circuit, client) {
 
 function getConfig() {
     var config = {
-        "bootstrap" : [{
-            "fingerprint" : "15BD35F29D087DC1E33F5E4B2A0C7551C8212A506CBB1E946D299F7CFE892578",
-            "address" : "discovery1",
-            "port" : 6001,
-            "identity" : "psp.discovery.node.2h2CF1JrVkbYFn2ynq5atK4FV6kRLepHEZFMLmAxRAjQzm9AJX"
+        "bootstrap" : [
+            {
+                "address": "discovery1",
+                "port": 6001,
+                "identity": "xpx.discovery.node.6r7hhn9em5jT7FMX1XUdT3rmzvLR9anrfeCPwDy9CNnfvgUrR",
+                "fingerprint": "39F55A3B00FB4E372553ABCB9763680EEF7A85CF49A12335B740C86D95CE7DBA",
             },
             {
-                "fingerprint" : "595F9ECDA84E83DAA85E0CF5918159D00B29D17A946FE61664280371B11D3AEF",
-                "address" : "discovery2",
-                "port" : 6002,
-                "identity" : "psp.discovery.node.2PJFbzCyPvcAAyX4ngWd34Xbu2Cif4y4rqrcJgmpNiF32wi55q"
+                "address": "discovery2",
+                "port": 6002,
+                "identity": "xpx.discovery.node.291oKY42Xn1Dd25fRpDxcRxD6tQMHKWt2yU44pCGsGLTQ3tmyC",
+                "fingerprint": "6C689A29F62AD016D51FF309063585176E90BEE09DB5C9D0C35BB3AF3879F573",
             },
             {
-                "fingerprint" : "58660ABAF404F4E87A280424B8C2CD16965D0EB9F7C7B221C000B3AC757D2E6C",
-                "address" : "discovery3",
-                "port" : 6003,
-                "identity" : "psp.discovery.node.univEGkZFu6QwkVtH3WK8PRbDYuWNj6Nra3sRj6phwRoVwDPs"
+                "address": "discovery3",
+                "port": 6003,
+                "identity": "xpx.discovery.node.iuZ7kVgWd95TwrkduBFaZMtteLV6pHLKD7W5cZToaFznWkBpY",
+                "fingerprint": "F40759E4417825C6253AAD676A5DDEEF04A569F2EADB6CAC13FA7C7163E0038E",
             },
             {
-                "fingerprint" : "C2766AD9060A8F7D7C45D87355798E634C67045042186BB6ACB1DDBC75700894",
-                "address" : "discovery4",
-                "port" : 6004,
-                "identity" : "psp.discovery.node.2Jrfk2HLqeFKTu74ooeA4cHdQURZhsNgSwjM4qXTBZRgaFetVg"
+                "address": "discovery4",
+                "port": 6004,
+                "identity": "xpx.discovery.node.BknYLk69thJEC5a4duZBnR4DM1PuQjiSd3xh1ub7uE9c5gnWd",
+                "fingerprint": "2C99C27F38958A8809545EFD52B87B7D094884A4A6BBC7C68F7ABCBDC7AE1C33",
             },
             {
-                "fingerprint" : "BCB322D1626F75C06AA1BD31536EEA84CDAC7232F1CC7851A31AED57713BDF6B",
-                "address" : "discovery5",
-                "port" : 6005,
-                "identity" : "psp.discovery.node.2Hz7aA5MJ3BXHM3UFYvZZjuZJgzcapApqAkLHcq6VSzHLRGiM5"
+                "address": "discovery5",
+                "port": 6005,
+                "identity": "xpx.discovery.node.9H8hXQ31pM9YWRBgi2ahn3X2hdSuVrWR78iJ2eo1SwWhktjgt",
+                "fingerprint": "5AD8CEBB10D0521274FFC202A3D356DFD86453C0A12E2F02C2BE087A842CCD53",
             }
         ],
         "hops" : {

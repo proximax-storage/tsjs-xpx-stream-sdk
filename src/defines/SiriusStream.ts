@@ -11,7 +11,7 @@ export const StreamNamespaceId = Object.freeze({
     MediaStreamingProtocol     : 5,
 });
 
-export const DiscoveryRequestProtocolNum = "psp-discovery-1.0";
+export const DiscoveryRequestProtocolNum = "xpx-discovery-1.0";
 
 /**
  * MaxApplicationMessageSize defines the maximum allowed length
@@ -19,7 +19,7 @@ export const DiscoveryRequestProtocolNum = "psp-discovery-1.0";
 export const MaxApplicationMessageSize = 2 * 1024 * 1024; //65535 - 2
 
 /**
- * MaxPayloadLength defines maximum fixed cell size.
+ * MaxPayloadLength defines maximum fixed cell s
  */
 const MaxPayloadLength = 509;
 
