@@ -139,9 +139,6 @@ export class SiriusStreamClient {
                 context.onLoginSucess(pressenceKey);
         };
 
-        // cleanup incase this is second attempt and connections where established before
-        this.annuncePresence.shutdown();
-
         this.annuncePresence.loginUser(userData);
     }
 

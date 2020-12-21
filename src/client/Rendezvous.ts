@@ -49,6 +49,7 @@ export class Rendezvous {
     private circuitBuilder : CircuitBuilder = null;
 
     private readonly config : any = null;
+    private forwarder : ForwardPresence = null;
 
     constructor(config : any) {
         this.config = config;
@@ -117,6 +118,8 @@ export class Rendezvous {
     shutdown() {
         if(this.circuitBuilder)
             this.circuitBuilder.shutdown();
+        if(this.forwarder)
+            this.forwarder.shutdown();
     }
 
     onCircuitCreated(circuit : Circuit) {
@@ -238,7 +241,10 @@ export class Rendezvous {
         let request = initiator.generateIntroduceRequest(req.marshal());
         let fpr = new client.protocol.ForwardPresenceRequest({request: request});
 
-        let forwarder = new ForwardPresence(this.config);
-        forwarder.do(fpr, this.nodes, lastNode);
+        if(this.forwarder)
+            this.forwarder.shutdown();
+
+        this.forwarder = new ForwardPresence(this.config);
+        this.forwarder.do(fpr, this.nodes, lastNode);
     }
 }

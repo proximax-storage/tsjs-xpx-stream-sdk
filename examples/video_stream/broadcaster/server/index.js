@@ -55,6 +55,12 @@ wsServer.on('connection', (ws, req) => {
     param.isCamEnabled = false;
     param.version = 1;
 
+    if(client.Discovery.NodeList == null || client.Discovery.NodeList.length <= 0) {
+        let message = "message|Unable to discover nodes, click refresh and try again...";
+        ws.send(message);
+        return;
+    }
+
     let videoStream = new VideoStream();
     videoStream.Nodes = client.Discovery.NodeList;
     videoStream.createBroadcastStream(param, (token) =>{
@@ -62,8 +68,20 @@ wsServer.on('connection', (ws, req) => {
         console.log("Success creating broadcast stream1 with token " + token);
         ready = true;
 
-        ws.send(token);
+        let message = "token|" + token;
+        ws.send(message);
     });
+
+    /**
+    * Catch the logs and display on client side
+    * */
+    let logRouter = (msg)=>{
+        let message = "message|"+msg;
+        ws.send(message);
+    };
+
+    client.OnError = logRouter;
+    client.OnLog = logRouter;
 
     /**
      * Receives data from frontend and builds the Frame object,

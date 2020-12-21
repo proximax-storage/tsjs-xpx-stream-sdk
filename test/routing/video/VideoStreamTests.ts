@@ -1,17 +1,19 @@
 import {VideoStream, VideoStreamParameters} from "../../../src/routing/video/VideoStream";
 import {expect} from "chai";
 import {SiriusStreamClient} from "../../../src/client/SiriusStreamClient";
-const getConfig = require("../../../config/test-config");
+const {getConfig, CONFIG_ENVIRONMENT_STAGING} = require("../../../config/test-config");
 import {connectAttempt} from "../../common/common";
 import {Frame, FrameType, Orientation} from "../../../src/media/Frame";
 
 describe('VideoStream test', () => {
-    it('Video Stream test', async () => {
+    it('Video Stream test', async function() {
+        // due to connection, we set mocha timeout to 20 seconds
+        this.timeout(20 * 1000);
 
         /**
          * Initiate discovery
          * */
-        let client = new SiriusStreamClient(getConfig());
+        let client = new SiriusStreamClient(getConfig(CONFIG_ENVIRONMENT_STAGING));
 
         let discoveryPromise = new Promise(function (resolve, reject){
             connectAttempt(client, ()=>{

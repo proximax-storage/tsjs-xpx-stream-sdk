@@ -529,7 +529,6 @@ export class VideoStream {
      */
     sendVideoFrame(frame : Frame) {
         if(this.numViewers < minViewersToBroadcast) {
-            Log("No viewers on this broadcast, not sending frame");
             return;
         }
 
@@ -554,7 +553,6 @@ export class VideoStream {
      */
     sendAudioFrame(frame : Frame) {
         if(this.numViewers < minViewersToBroadcast) {
-            Log("No viewers on this broadcast, not sending audio frame");
             return;
         }
 

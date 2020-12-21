@@ -107,7 +107,19 @@ function start() {
     };
 
     ws.onmessage = (data) =>{
-        document.getElementById('tokenid').innerHTML = "<br><b> Streaming at :</b> " + data.data;
+        let value = data.data;
+        let tokens = value.split("|");
+        if(tokens[0] == "token")
+            document.getElementById('tokenid').innerHTML = "<br><b> Streaming at :</b> " + tokens[1];
+
+        else if(tokens[0] == "message") {
+            var node = document.createElement("p");
+            var textnode = document.createTextNode(tokens[1]);
+            node.appendChild(textnode);
+
+            let chatroom = document.getElementById("chatroom");
+            chatroom.appendChild(node);
+        }
     }
 
     setTimeout(()=>{

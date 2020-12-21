@@ -55,20 +55,22 @@ export class OnionClientConnection {
         this.fingerPrint = fingerprint;
         this.onConnected = onConnected;
         this.moduleName = "Connection://" +host+":"+port;
+
+        this.pinger();
     }
 
     /**
      * disconnect a TLS socket
      */
     disconnect() {
-        this.context.cleanup();
+        this.cleanup();
 
-        clearInterval(this.context.ping);
+        clearInterval(this.ping);
 
-        if(this.context.tcpSocket)
-            this.context.tcpSocket.destroy();
+        if(this.tcpSocket)
+            this.tcpSocket.destroy();
 
-        this.context.tcpSocket = null;
+        this.tcpSocket = null;
     }
 
     /**
@@ -78,7 +80,7 @@ export class OnionClientConnection {
         var object = this;
 
         this.ping = setInterval(function () {
-            if(object.alive)
+            if(object.alive && object.cellSender)
                 object.cellSender.send(NewFixedCell(0, defines.Command.Padding));
             else
                 clearInterval(this.ping);
@@ -104,8 +106,6 @@ export class OnionClientConnection {
                     "Fingerprint (Peer): " + handshake.getFingerPrint());
                 return;
             }
-
-            this.pinger();
 
             if(this.onConnected)
                 this.onConnected();
@@ -139,7 +139,7 @@ export class OnionClientConnection {
      * cleans up callback handlers and kills the pinger
      */
     cleanup() {
-        this.Receiver.getDispatcher().removeHandlersById(this.moduleName);
-        this.alive = false;
+        this.context.Receiver.getDispatcher().removeHandlersById(this.moduleName);
+        this.context.alive = false;
     }
 }

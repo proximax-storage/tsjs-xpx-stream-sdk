@@ -43,6 +43,7 @@ export class LookUpPresenceManager {
     private identity : Identity;
     private signature : SignedEd25519KeyPair;
     private onChannelCreateSuccess : OnChannelCreated;
+    private rvCircuit : Rendezvous = null;
 
     private readonly config : any = null;
 
@@ -66,9 +67,6 @@ export class LookUpPresenceManager {
 
         var context = this;
 
-        if(this.circuitBuilder)
-            this.circuitBuilder.shutdown();
-
         this.circuitBuilder = new CircuitBuilder();
         this.circuitBuilder.build(routes);
         this.circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
@@ -82,6 +80,8 @@ export class LookUpPresenceManager {
     shutdown() {
         if(this.circuitBuilder)
             this.circuitBuilder.shutdown();
+        if(this.rvCircuit)
+            this.rvCircuit.shutdown();
     }
 
     lookupPresence(circuit : Circuit){
@@ -99,6 +99,8 @@ export class LookUpPresenceManager {
 
     onLookupResult(msg : client.protocol.LookupResult) {
         if( msg.result != undefined && msg.result != client.protocol.LookupResult.resultType.success) {
+            this.shutdown();
+
             ErrorLog("Lookup presence failure with result" + msg.result);
             return;
         }
@@ -188,16 +190,16 @@ export class LookUpPresenceManager {
 
                 // create rendezvous circuit here
                 // circuit handler not set as it is created in rendezvous
-                let rvCircuit = new Rendezvous(this.config);
-                rvCircuit.Payload = cookie;
-                rvCircuit.Establish = true;
-                rvCircuit.RvKey = key;
-                rvCircuit.Identity = this.Identity;
-                rvCircuit.Signature = this.signature;
-                rvCircuit.TargetForwardPresence = targetFP;
-                rvCircuit.OtherUser = this.targetUserId;
-                rvCircuit.OnChannelCreateSucces = this.onChannelCreateSuccess;
-                rvCircuit.go(this.nodes);
+                this.rvCircuit = new Rendezvous(this.config);
+                this.rvCircuit.Payload = cookie;
+                this.rvCircuit.Establish = true;
+                this.rvCircuit.RvKey = key;
+                this.rvCircuit.Identity = this.Identity;
+                this.rvCircuit.Signature = this.signature;
+                this.rvCircuit.TargetForwardPresence = targetFP;
+                this.rvCircuit.OtherUser = this.targetUserId;
+                this.rvCircuit.OnChannelCreateSucces = this.onChannelCreateSuccess;
+                this.rvCircuit.go(this.nodes);
             }
         }
     }

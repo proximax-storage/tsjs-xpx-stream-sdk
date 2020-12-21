@@ -49,6 +49,8 @@ export class AnnouncePresence {
     private readonly config : any = null;
     private rvCircuit : Rendezvous = null;
     private context : any = null;
+    private updatePinger : any = null;
+    private announced : boolean = false;
 
     constructor(config : any) {
         this.updating = false;
@@ -61,39 +63,46 @@ export class AnnouncePresence {
     }
 
     loginUser(userData : SignedEd25519KeyPair) {
-        if(!this.config)
+        if (!this.config)
             throw("Config not set in Announce Presence");
 
         var context = this;
 
         // build random random nodes from hop count in config
-        this.routes = ExtractRandomNodesWithType(this.nodes, names.TypeOnionNode,this.config.hops.announcePresence );
+        this.routes = ExtractRandomNodesWithType(this.nodes, names.TypeOnionNode, this.config.hops.announcePresence);
 
         let presenceKey = curve.generateKeyPair(crypto.randomBytes(Curve25519SeedSize));
         this.presenceKey = new Curve25519KeyPair(Buffer.from(presenceKey.private),
             Buffer.from(presenceKey.public));
 
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
+
         this.circuitBuilder = new CircuitBuilder();
         this.circuitBuilder.build(this.routes);
-        this.circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
+        this.circuitBuilder.OnCircuitReady = (circuit: Circuit) => {
             context.circuit = circuit;
             context.announce();
         };
 
         this.userData = userData;
+
+        this.updater();
     }
 
     shutdown() {
-        if(this.context.circuitBuilder)
-            this.context.circuitBuilder.shutdown();
-        if(this.context.rvCircuit)
-            this.context.rvCircuit.shutdown();
-        if(this.context.circuit)
-            this.context.circuit.cleanup();
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
+        if(this.rvCircuit)
+            this.rvCircuit.shutdown();
+        if(this.circuit)
+            this.circuit.cleanup();
 
-        this.context.circuitBuilder = null;
-        this.context.rvCircuit = null;
-        this.context.circuit = null;
+        this.circuitBuilder = null;
+        this.rvCircuit = null;
+        this.circuit = null;
+
+        clearInterval(this.context.updatePinger);
     }
 
     announce() {
@@ -150,7 +159,10 @@ export class AnnouncePresence {
 
     onAnnouncePresenceResult(msg : client.protocol.AnnouncementResult) {
         if( msg.result != undefined && msg.result != client.protocol.AnnouncementResult.resultType.success) {
+            this.shutdown();
+
             ErrorLog("Announcement presence failure " + msg.result);
+
             return;
         }
 
@@ -158,7 +170,7 @@ export class AnnouncePresence {
             if(this.onAnnouncePresenceSucceed)
                 this.onAnnouncePresenceSucceed(this.userIdentity);
 
-            this.updater();
+            this.announced = true;
 
             Log("Announcing Presence success!");
 
@@ -169,16 +181,18 @@ export class AnnouncePresence {
 
     updater() {
         var object = this;
-        if(this.circuit == null)
-            return;
+        this.updatePinger = setInterval(function () {
+            if (!object.announced)
+                return;
 
-        let updatePinger = setInterval(function () {
+            if(object.circuit == null) {
+                clearInterval(object.updatePinger);
+                return;
+            }
+
             object.updating = true;
             object.announce();
 
-            if(this.circuit == null) {
-                clearInterval(updatePinger);
-            }
         }, 30 * 1000);
     }
 

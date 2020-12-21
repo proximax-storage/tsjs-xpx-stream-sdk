@@ -2,7 +2,8 @@ import {SiriusStreamClient} from "../../src/client/SiriusStreamClient";
 import {expect} from "chai";
 import {RETRY_MAX_ATTEMPT, connectAttempt} from "../common/common";
 
-const getConfig = require("../../config/test-config");
+const {getConfig, CONFIG_ENVIRONMENT_LOCAL, CONFIG_ENVIRONMENT_STAGING} = require("../../config/test-config");
+let env = CONFIG_ENVIRONMENT_STAGING;
 
 function loginAttempt(client, data, callback) {
     let retry = 0;
@@ -18,6 +19,7 @@ function loginAttempt(client, data, callback) {
         if(error.indexOf('Announcement presence failur') != -1 && retry++ < RETRY_MAX_ATTEMPT) {
            login(client, data);
         }else{
+            client.shutdown();
             callback(false, null);
         }
     };
@@ -38,6 +40,7 @@ function createChannelAttempt(client, partnerId, callback) {
         if (error.indexOf('Lookup presence failure') != -1 && retry++ < RETRY_MAX_ATTEMPT) {
             createChannel(client, partnerId);
         } else {
+            client.shutdown();
             callback(null, null);
         }
     };
@@ -47,7 +50,7 @@ function createChannelAttempt(client, partnerId, callback) {
 
 describe('Sirius Stream Client test', () => {
     it('can discover nodes', function(done) {
-        let client = new SiriusStreamClient(getConfig());
+        let client = new SiriusStreamClient(getConfig(env));
         connectAttempt(client, ()=>{
             expect(client.Discovery.NodeList.length).greaterThan(0);
             client.shutdown();
@@ -58,7 +61,7 @@ describe('Sirius Stream Client test', () => {
     it('can register user', function(done) {
         this.timeout(20 * 1000);
 
-        let client = new SiriusStreamClient(getConfig());
+        let client = new SiriusStreamClient(getConfig(env));
         connectAttempt(client, ()=>{
             expect(client.Discovery.NodeList.length).greaterThan(0);
 
@@ -73,7 +76,7 @@ describe('Sirius Stream Client test', () => {
     it('can announce presence user', function(done) {
         this.timeout(20 * 1000);
 
-        let client = new SiriusStreamClient(getConfig());
+        let client = new SiriusStreamClient(getConfig(env));
         connectAttempt(client, ()=>{
             expect(client.Discovery.NodeList.length).greaterThan(0);
 
@@ -91,8 +94,8 @@ describe('Sirius Stream Client test', () => {
     it('can create Channel between users', async function() {
         this.timeout(20 * 1000);
 
-        let client1 = new SiriusStreamClient(getConfig());
-        let client2 = new SiriusStreamClient(getConfig());
+        let client1 = new SiriusStreamClient(getConfig(env));
+        let client2 = new SiriusStreamClient(getConfig(env));
         let client1Presence = '';
         let client2Presence = '';
         let circuit1 = null;

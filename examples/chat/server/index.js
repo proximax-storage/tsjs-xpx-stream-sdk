@@ -44,8 +44,6 @@ io.on('connection', (client) => {
         siriusStream.start();
         siriusStream.OnApplicationReady = () => {
             client.emit("application_ready","");
-
-
         };
     });
 

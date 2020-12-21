@@ -13,6 +13,7 @@ export class ForwardPresence {
     private request : client.protocol.ForwardPresenceRequest;
 
     private readonly config : any = null;
+    private circuitBuilder : CircuitBuilder = null;
 
     constructor(config : any) {
         this.config = config;
@@ -27,13 +28,18 @@ export class ForwardPresence {
         routes.push(target);
 
         var context = this;
-        let circuitBuilder = new CircuitBuilder();
-        circuitBuilder.build(routes);
-        circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
+        this.circuitBuilder = new CircuitBuilder();
+        this.circuitBuilder.build(routes);
+        this.circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
             context.onCircuitCreated(circuit);
         };
 
         this.request = req;
+    }
+
+    shutdown() {
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
     }
 
     onCircuitCreated(circuit : Circuit) {
