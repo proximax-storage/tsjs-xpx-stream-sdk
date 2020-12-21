@@ -5,7 +5,7 @@
  **/
 import {Discovery, EntryNode} from "./Discovery";
 import {Authentication} from "./Authentication";
-import {Log, setGlobalErrorHandler} from "../utils/Logger";
+import {Log, setGlobalErrorHandler, setLogCallback} from "../utils/Logger";
 import {SignedEd25519KeyPair} from "../cert/KeyPair";
 import {AnnouncePresence} from "./AnnouncePresence";
 import {LookUpPresenceManager} from "./LookupPresenceManager";
@@ -230,6 +230,10 @@ export class SiriusStreamClient {
      */
     set OnError(callback : (message : string) => void) {
         setGlobalErrorHandler(callback)
+    }
+
+    set OnLog(callback: (message:string) => void) {
+        setLogCallback(callback);
     }
 
     /**

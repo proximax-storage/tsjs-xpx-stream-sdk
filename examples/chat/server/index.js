@@ -1,12 +1,11 @@
 const path = require('path');
 const SiriusStreamClient = require('tsjs-xpx-stream-sdk').SiriusStreamClient;
-const getConfig = require("../../../config/test-config");
+const {getConfig, CONFIG_ENVIRONMENT_STAGING} = require("../../../config/test-config");
 
 const express = require('express');
 const app = express();
 let http = require("http").Server(app);
 let io = require("socket.io")(http);
-
 
 /**
  * node server saved the authentication data during registration
@@ -28,13 +27,25 @@ io.on('connection', (client) => {
     //default username
     client.username = "Anonymous";
 
-    let siriusStream = new SiriusStreamClient(getConfig());
+    let siriusStream = new SiriusStreamClient(getConfig(CONFIG_ENVIRONMENT_STAGING));
     let circuit = null;
+
+    // set the global logger and display on client side
+    let logRouter = (msg)=>{
+        client.emit("logs", {
+            message :  msg
+        });
+    };
+
+    siriusStream.OnError = logRouter;
+    siriusStream.OnLog = logRouter;
 
     client.on('initialize', (data) => {
         siriusStream.start();
         siriusStream.OnApplicationReady = () => {
             client.emit("application_ready","");
+
+
         };
     });
 

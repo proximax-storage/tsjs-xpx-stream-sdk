@@ -58,6 +58,10 @@ socket.on('channel_invite_result', (data) => {
         appendToMessage("Channel connection denied by"+ data.userID + " ...");
 })
 
+socket.on('logs', (data) =>{
+    appendToMessage("[Logs] " + data.message );
+});
+
 function initialize() {
     socket.emit('initialize', "");
 }
