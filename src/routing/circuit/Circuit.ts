@@ -401,6 +401,11 @@ export class Circuit {
         this.onRelay.set(cmd, handler);
     }
 
+    shutdown() {
+        this.cleanup();
+        this.sender.close();
+    }
+
     get Dispatcher() {
         return this.dispatcher;
     }

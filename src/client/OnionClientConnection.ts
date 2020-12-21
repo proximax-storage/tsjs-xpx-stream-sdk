@@ -16,16 +16,19 @@ import {Log} from "../utils/Logger";
  * Connection object to any sirius stream node
  */
 export class OnionClientConnection {
-    private readonly tcpSocket: net.Socket;
+    private tcpSocket: net.Socket;
     private cellSender : CellSender
     private cellReceiveer : CellReceiver;
     private fingerPrint : string;
     private onConnected : () => void;
     private moduleName : string;
     private alive : boolean;
+    private ping : any = null;
+    private context : any = null;
 
     constructor() {
         this.tcpSocket = new net.Socket();
+        this.context = this;
     }
 
     /**
@@ -37,8 +40,11 @@ export class OnionClientConnection {
      */
     connect(host : string, port : number, fingerprint, onConnected) {
         var object = this;
+        this.alive = true;
+
         this.tcpSocket.connect( {port: port, host: host}, function (){
             Log("TCP connection established");
+            if(!object.alive) return;
             object.handleNewConnection();
         });
 
@@ -52,17 +58,30 @@ export class OnionClientConnection {
     }
 
     /**
+     * disconnect a TLS socket
+     */
+    disconnect() {
+        this.context.cleanup();
+
+        clearInterval(this.context.ping);
+
+        if(this.context.tcpSocket)
+            this.context.tcpSocket.destroy();
+
+        this.context.tcpSocket = null;
+    }
+
+    /**
      * sends a message to the server every 10 seconds to keep connection alive
      */
     pinger() {
         var object = this;
-        this.alive = true;
 
-        let ping = setInterval(function () {
+        this.ping = setInterval(function () {
             if(object.alive)
                 object.cellSender.send(NewFixedCell(0, defines.Command.Padding));
             else
-                clearInterval(ping);
+                clearInterval(this.ping);
 
         }, 10 * 1000);
     }
@@ -74,10 +93,11 @@ export class OnionClientConnection {
         var tlsConn = new tls.TLSSocket(this.tcpSocket, {});
         this.cellSender = new CellSender(tlsConn);
         this.cellReceiveer = new CellReceiver(tlsConn);
-        this.alive = true;
 
         var context = this;
         var handshake = new hs.Handshake(tlsConn, this.cellSender, this.cellReceiveer, ()=>{
+            if(!context.alive) return;
+
             if(handshake.getFingerPrint() != context.fingerPrint) {
                 Log("Invalid fingerprint " +
                     "Fingerprint (Self): " + context.fingerPrint + " " +

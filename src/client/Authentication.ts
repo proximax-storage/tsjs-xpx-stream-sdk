@@ -39,6 +39,7 @@ export class Authentication {
 
     private circuitCache : Circuit;
     private circuitBuilder : CircuitBuilder;
+    private context : any = null;
 
     private readonly config : any = null;
 
@@ -47,6 +48,7 @@ export class Authentication {
         this.CachedCertificate = null;
 
         this.config = conf;
+        this.context = this;
     }
 
     set Nodes (nodes : Array<NodePublicIdentity>) {
@@ -80,11 +82,19 @@ export class Authentication {
         let nodes = ExtractRandomNodesWithType(this.nodes, names.TypeOnionNode,this.config.hops.authenication );
         nodes.push(endPoint);
 
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
+
         this.circuitBuilder = new CircuitBuilder();
         this.circuitBuilder.build(nodes);
         this.circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
             context.renewCertificate(circuit);
         };
+    }
+
+    shutdown() {
+        if(this.context.circuitBuilder)
+            this.context.circuitBuilder.shutdown();
     }
 
     renewCertificate(circuit : Circuit) {
@@ -139,10 +149,12 @@ export class Authentication {
         }
 
         addSignature(this.CachedCertificate.Certificate, Buffer.from(msg.signature), true);
+
         var context = this;
         if(!this.CachedCertificate.Certificate.validate((identiy)=>{
-            return validateNodeIdentity(this.nodes, identiy);})) {
-            this.registerUser();
+            return validateNodeIdentity(this.nodes, identiy);
+            })) {
+            context.registerUser();
             return;
         }
 

@@ -46,6 +46,7 @@ export class Rendezvous {
     private onInvitedChannelSuccess : OnChannelCreated;
     private otherUser : string;
     private circuitHandler : RvCircuitHandler;
+    private circuitBuilder : CircuitBuilder = null;
 
     private readonly config : any = null;
 
@@ -106,11 +107,16 @@ export class Rendezvous {
         }
 
         var context = this;
-        let circuitBuilder = new CircuitBuilder();
-        circuitBuilder.build(this.routes, (target)? target.linkSpecs : null);
-        circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
+        this.circuitBuilder = new CircuitBuilder();
+        this.circuitBuilder.build(this.routes, (target)? target.linkSpecs : null);
+        this.circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
             context.onCircuitCreated(circuit);
         };
+    }
+
+    shutdown() {
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
     }
 
     onCircuitCreated(circuit : Circuit) {

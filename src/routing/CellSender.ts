@@ -16,4 +16,8 @@ export class CellSender {
     send(cell : Cell) {
          this.tlsConn.write(cell.getData());
     }
+
+    close() {
+        this.tlsConn.destroy();
+    }
 }

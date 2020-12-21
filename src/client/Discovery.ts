@@ -73,6 +73,10 @@ export class Discovery {
         };
     }
 
+    shutdown() {
+        this.streamManager.shutdown();
+    }
+
     requestPullDiscovery() {
 
         let msg = new schema.protocol.PullDiscovery();

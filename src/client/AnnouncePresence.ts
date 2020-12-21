@@ -47,10 +47,13 @@ export class AnnouncePresence {
 
     private onInvitedToChannel : OnChannelCreated;
     private readonly config : any = null;
+    private rvCircuit : Rendezvous = null;
+    private context : any = null;
 
     constructor(config : any) {
         this.updating = false;
         this.config = config;
+        this.context = this;
     }
 
     set OnInvitedToChannel(callback : OnChannelCreated) {
@@ -78,6 +81,19 @@ export class AnnouncePresence {
         };
 
         this.userData = userData;
+    }
+
+    shutdown() {
+        if(this.context.circuitBuilder)
+            this.context.circuitBuilder.shutdown();
+        if(this.context.rvCircuit)
+            this.context.rvCircuit.shutdown();
+        if(this.context.circuit)
+            this.context.circuit.cleanup();
+
+        this.context.circuitBuilder = null;
+        this.context.rvCircuit = null;
+        this.context.circuit = null;
     }
 
     announce() {
@@ -153,9 +169,16 @@ export class AnnouncePresence {
 
     updater() {
         var object = this;
-        let ping = setInterval(function () {
+        if(this.circuit == null)
+            return;
+
+        let updatePinger = setInterval(function () {
             object.updating = true;
             object.announce();
+
+            if(this.circuit == null) {
+                clearInterval(updatePinger);
+            }
         }, 30 * 1000);
     }
 
@@ -190,13 +213,13 @@ export class AnnouncePresence {
         payload.Cookie.copy(p);
         auth.copy(p, HSHashSize);
 
-        let rvCircuit = new Rendezvous(this.config);
-        rvCircuit.Payload = p;
-        rvCircuit.Establish = false;
-        rvCircuit.go(this.nodes, payload);
-        rvCircuit.OtherUser = sm.Certificate.PKIAccountID.Id;
-        rvCircuit.CircuitHandler = parser;
-        rvCircuit.OnInvitedChannelSuccess = this.onInvitedToChannel;
+        this.rvCircuit = new Rendezvous(this.config);
+        this.rvCircuit.Payload = p;
+        this.rvCircuit.Establish = false;
+        this.rvCircuit.go(this.nodes, payload);
+        this.rvCircuit.OtherUser = sm.Certificate.PKIAccountID.Id;
+        this.rvCircuit.CircuitHandler = parser;
+        this.rvCircuit.OnInvitedChannelSuccess = this.onInvitedToChannel;
     }
 
     set Nodes (nodes : Array<NodePublicIdentity>) {

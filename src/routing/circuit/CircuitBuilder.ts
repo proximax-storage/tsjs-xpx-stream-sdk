@@ -53,6 +53,11 @@ export class CircuitBuilder {
         }
     }
 
+    shutdown() {
+        if(this.connection)
+            this.connection.disconnect();
+    }
+
     completeOrExtend() {
         const nextNodeIndex = ++this.currIndex;
         const nodesSize = this.nodes.length;
@@ -81,6 +86,6 @@ export class CircuitBuilder {
     }
 
     close() {
-        this.connection.cleanup();
+        this.connection.disconnect();
     }
 }

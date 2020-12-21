@@ -53,6 +53,11 @@ export class StreamManager {
         });
     }
 
+    shutdown() {
+        if(this.client)
+            this.client.disconnect();
+    }
+
     registerEvents() {
         this.moduleName = "StreamManager" + this.streamID;
         var context = this;

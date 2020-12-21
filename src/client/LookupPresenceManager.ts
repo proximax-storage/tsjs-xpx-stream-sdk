@@ -35,7 +35,7 @@ export class PresenceRecord {
  * Looks up for a certain user in the network by looking up the presence where the user is in
  */
 export class LookUpPresenceManager {
-    private circuitBuilder : CircuitBuilder;
+    private circuitBuilder : CircuitBuilder = null;
     private targetUserId : string;
     private nodes : Array<NodePublicIdentity>;
     private rvKey : Buffer;
@@ -65,6 +65,10 @@ export class LookUpPresenceManager {
         let routes = ExtractRandomNodesWithType(nodes, names.TypeOnionNode,this.config.hops.lookupPresence);
 
         var context = this;
+
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
+
         this.circuitBuilder = new CircuitBuilder();
         this.circuitBuilder.build(routes);
         this.circuitBuilder.OnCircuitReady = (circuit : Circuit) => {
@@ -73,6 +77,11 @@ export class LookUpPresenceManager {
 
         this.targetUserId = userId;
         this.nodes = nodes;
+    }
+
+    shutdown() {
+        if(this.circuitBuilder)
+            this.circuitBuilder.shutdown();
     }
 
     lookupPresence(circuit : Circuit){

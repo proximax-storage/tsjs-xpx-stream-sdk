@@ -195,6 +195,11 @@ export class VideoStream {
         };
     }
 
+    shutdown() {
+        if(this.streamManager)
+            this.streamManager.shutdown();
+    }
+
     /**
      * setup initial and common parameters
      */

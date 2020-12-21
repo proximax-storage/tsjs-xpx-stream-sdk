@@ -27,10 +27,10 @@ export class SiriusStreamClient {
     /**
      * objects to manage Discovery, authentication (register) and announce presence(login)
      */
-    private discovery : Discovery;
-    private authentication : Authentication;
-    private annuncePresence: AnnouncePresence;
-
+    private discovery : Discovery = null;
+    private authentication : Authentication = null;
+    private annuncePresence: AnnouncePresence = null;
+    private lookup: LookUpPresenceManager = null;
     /**
      * Callback event triggered from SDK
      */
@@ -123,7 +123,6 @@ export class SiriusStreamClient {
      * @param onInvited - callback when another user invite to create channel
      */
     loginUser(userData : SignedEd25519KeyPair, onSuccess? : OnSiriusStreamCallback, onInvited? : OnChannelCreated) {
-
         if(onSuccess)
             this.onLoginSucess = onSuccess;
 
@@ -133,13 +132,17 @@ export class SiriusStreamClient {
         var context = this;
         this.annuncePresence = new AnnouncePresence(this.config);
         this.annuncePresence.Nodes = this.discovery.NodeList;
-        this.annuncePresence.loginUser(userData);
         this.annuncePresence.OnInvitedToChannel = this.onChannelInvited;
         this.annuncePresence.OnAnnouncePresenceSucess = (pressenceKey)=> {
             context.CurrentLoggedinData = userData;
             if(context.onLoginSucess)
                 context.onLoginSucess(pressenceKey);
         };
+
+        // cleanup incase this is second attempt and connections where established before
+        this.annuncePresence.shutdown();
+
+        this.annuncePresence.loginUser(userData);
     }
 
     /**
@@ -153,14 +156,33 @@ export class SiriusStreamClient {
         if(onSuccess)
             this.onChannelCreated = onSuccess;
 
-        let lookup = new LookUpPresenceManager(this.config);
+        this.lookup = new LookUpPresenceManager(this.config);
 
         // @ts-ignore
-        lookup.Signature = (userData)? userData : this.currentLoginData;
-        lookup.OnChannelCreateSuccess = this.onChannelCreated;
-        lookup.do(userId, this.discovery.NodeList);
+        this.lookup.Signature = (userData)? userData : this.currentLoginData;
+        this.lookup.OnChannelCreateSuccess = this.onChannelCreated;
+        this.lookup.do(userId, this.discovery.NodeList);
     }
 
+
+    /**
+     * Closes and disconnects
+     */
+    shutdown() {
+        if(this.discovery)
+            this.discovery.shutdown();
+        if(this.authentication)
+            this.authentication.shutdown();
+        if(this.annuncePresence)
+            this.annuncePresence.shutdown();
+        if(this.lookup)
+            this.lookup.shutdown();
+
+        this.discovery = null;
+        this.authentication = null;
+        this.annuncePresence = null;
+        this.lookup = null;
+    }
     /**
      * Event when SDK is ready after discovery where pulled from nodes
      */
@@ -198,6 +220,9 @@ export class SiriusStreamClient {
      */
     set OnChannelInvited (callback : OnChannelCreated) {
         this.onChannelInvited = callback;
+
+        if(this.annuncePresence)
+            this.annuncePresence.OnInvitedToChannel = callback;
     }
 
     /**

@@ -1,43 +1,186 @@
 import {SiriusStreamClient} from "../../src/client/SiriusStreamClient";
+import {expect} from "chai";
+import {RETRY_MAX_ATTEMPT, connectAttempt} from "../common/common";
+
+const getConfig = require("../../config/test-config");
+
+function loginAttempt(client, data, callback) {
+    let retry = 0;
+
+    let login = (client, data) => {
+        client.loginUser(data, (presenceKey)=>{
+            console.log("[Test] Announce Presence Key at "+ presenceKey);
+            callback(true, presenceKey);
+        })
+    };
+
+    client.OnError = (error) =>{
+        if(error.indexOf('Announcement presence failur') != -1 && retry++ < RETRY_MAX_ATTEMPT) {
+           login(client, data);
+        }else{
+            callback(false, null);
+        }
+    };
+
+   login(client, data);
+}
+
+function createChannelAttempt(client, partnerId, callback) {
+    let retry = 0;
+
+    let createChannel = (client, partnerId) => {
+        client.createChannel(partnerId, null, (circuit, userId) => {
+            callback(circuit, userId);
+        });
+    };
+
+    client.OnError = (error) => {
+        if (error.indexOf('Lookup presence failure') != -1 && retry++ < RETRY_MAX_ATTEMPT) {
+            createChannel(client, partnerId);
+        } else {
+            callback(null, null);
+        }
+    };
+
+    createChannel(client, partnerId);
+}
 
 describe('Sirius Stream Client test', () => {
-    it('can register user', () => {
-        var config = {
-            "bootstrap" : [{
-                "fingerprint" : "39F55A3B00FB4E372553ABCB9763680EEF7A85CF49A12335B740C86D95CE7DBA",
-                "address" : "discovery1",
-                "port" : 6001,
-                "identity" : "xpx.discovery.node.6r7hhn9em5jT7FMX1XUdT3rmzvLR9anrfeCPwDy9CNnfvgUrR"
-                },
-                {
-                "fingerprint" : "5AD8CEBB10D0521274FFC202A3D356DFD86453C0A12E2F02C2BE087A842CCD53",
-                "address" : "discovery5",
-                "port" : 6005,
-                "identity" : "xpx.discovery.node.9H8hXQ31pM9YWRBgi2ahn3X2hdSuVrWR78iJ2eo1SwWhktjgt"
-                }
-                ],
-            "hops" : {
-                "authentication" : 2,
-                "announcePresence" : 3,
-                "lookupPresence" : 3,
-                "forwardPresence": 2
-            }
+    it('can discover nodes', function(done) {
+        let client = new SiriusStreamClient(getConfig());
+        connectAttempt(client, ()=>{
+            expect(client.Discovery.NodeList.length).greaterThan(0);
+            client.shutdown();
+            done();
+        });
+    })
+
+    it('can register user', function(done) {
+        this.timeout(20 * 1000);
+
+        let client = new SiriusStreamClient(getConfig());
+        connectAttempt(client, ()=>{
+            expect(client.Discovery.NodeList.length).greaterThan(0);
+
+           client.register((data)=>{
+               expect(data).not.equal(null);
+               client.shutdown();
+               done();
+           })
+        });
+    })
+
+    it('can announce presence user', function(done) {
+        this.timeout(20 * 1000);
+
+        let client = new SiriusStreamClient(getConfig());
+        connectAttempt(client, ()=>{
+            expect(client.Discovery.NodeList.length).greaterThan(0);
+
+            client.register((data)=>{
+                expect(data).not.equal(null);
+                loginAttempt(client, data, (result, presenceKey) =>{
+                    expect(result).equal(true);
+                    client.shutdown();
+                    done();
+                });
+            });
+        });
+    })
+
+    it('can create Channel between users', async function() {
+        this.timeout(20 * 1000);
+
+        let client1 = new SiriusStreamClient(getConfig());
+        let client2 = new SiriusStreamClient(getConfig());
+        let client1Presence = '';
+        let client2Presence = '';
+        let circuit1 = null;
+        let circuit2 = null;
+
+        let login = (client, resolve, callback) => {
+            connectAttempt(client, ()=>{
+                expect(client.Discovery.NodeList.length).greaterThan(0);
+                client.register((data)=>{
+                    expect(data).not.equal(null);
+                    loginAttempt(client, data, (result, presenceKey) =>{
+                        expect(result).equal(true);
+                        callback(presenceKey);
+                        resolve();
+                    });
+                });
+            });
         };
 
-      let client = new SiriusStreamClient(config);
-      let userdata = null
+        let c1Promise = new Promise(function (resolve, reject){
+            login(client1, resolve, (presence) =>{
+                client1Presence = presence;
+                console.log("[Test] Announce Presence Key success for client1");
+            });
+        });
 
-       client.start();
-       client.OnApplicationReady = () => {
-           client.register((data)=>{
-               userdata = data;     //demonstrate that users of sdk needs to store it at app level
-               client.loginUser(data);
-           });
-       };
+        await c1Promise;
 
-       client.OnLoginSucees =(presenceKey)=>{
-         //  var userId = "sirius.client.account.MVtLwMU3E7JydgTZnKrfmrMM146nKS32cYcmjtqN5zTxkqfGr";
-         //  client.createChannel(userId, null);
-       };
+        // set channel invite callback in advance so it is set during login
+        let channel2Promise = new Promise(function (resolve, reject){
+            client2.OnChannelInvited = (circuit, userId)=>{
+                expect(userId, client1Presence);
+                circuit2 = circuit;
+                resolve();
+            }
+        });
+
+        let c2Promise = new Promise(function (resolve, reject){
+            login(client2, resolve, (presence) =>{
+                client2Presence = presence;
+                console.log("[Test] Announce Presence Key success for client2");
+            });
+        });
+
+        await c2Promise;
+
+        expect(client1Presence.length).greaterThan(0);
+        expect(client2Presence.length).greaterThan(0);
+
+        this.timeout(20 * 1000);
+
+        let channel1Promise = new Promise(function (resolve, reject){
+            // create channel from client 1 to client 2
+            createChannelAttempt(client1, client2Presence, (circuit, id)=>{
+                expect(id, client2Presence);
+                circuit1 = circuit;
+                resolve();
+            });
+        });
+
+        await channel1Promise;
+        await channel2Promise;
+
+        // we are ready to send messages
+        const message = "Hello Streaming";
+        const reply = "Howdy mate";
+
+        circuit1.sendUserDataString(message);
+
+        let circuitMessagePromise = new Promise(function (resolve, reject){
+            circuit2.OnReceivedUserDataString = (msg)=>{
+               expect(msg).equal(message);
+                circuit2.sendUserDataString(reply);
+               resolve();
+            }
+        });
+
+        let replyMessagePromise = new Promise(function (resolve, reject){
+            circuit1.OnReceivedUserDataString = (msg)=>{
+                expect(msg).equal(reply);
+                resolve();
+            }
+        });
+
+        await replyMessagePromise;
+        await circuitMessagePromise;
+
+        client1.shutdown();
+        client2.shutdown();
     })
 });
