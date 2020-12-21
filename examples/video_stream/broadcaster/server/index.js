@@ -19,13 +19,13 @@ const FrameType = require('tsjs-xpx-stream-sdk').FrameType;
 const SoundBuf = require('tsjs-xpx-stream-sdk').SoundBuf;
 const fProtocol = require('tsjs-xpx-stream-sdk').fProtocol;
 const fCompSPEEX = require('tsjs-xpx-stream-sdk').fCompSPEEX;
-const getConfig = require("../../../../config/test-config");
+const {getConfig, CONFIG_ENVIRONMENT_STAGING} = require("../../../../config/test-config");
 
 /**
  * create sirius client object with the config
  * we need for node list during broadcast
  * */
-let client = new SiriusStreamClient(getConfig());
+let client = new SiriusStreamClient(getConfig(CONFIG_ENVIRONMENT_STAGING));
 
 client.start();
 client.OnApplicationReady = () => {
