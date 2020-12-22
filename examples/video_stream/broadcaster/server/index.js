@@ -193,15 +193,15 @@ app.get('/client/serializer.js', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../common/binary.js'));
 });
 
-app.get('/client/tsjs-xpx-stream-sdk-client/speexWorker.js', (req, res) => {
+app.get('/client/speexWorker.js', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../client/workers/speexWorker.js'));
 });
 
-app.get('/client/tsjs-xpx-stream-sdk-client/libspeex.js', (req, res) => {
+app.get('/client/libspeex.js', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../common/webasm/libspeex.js'));
 });
 
-app.get('/client/tsjs-xpx-stream-sdk-client/libspeex.wasm', (req, res) => {
+app.get('/client/libspeex.wasm', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../common/webasm/libspeex.wasm'));
 });
 

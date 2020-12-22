@@ -30,7 +30,7 @@ SpeexModule = {
 };
 
 _this.importScripts("./libspeex.js");
-_this.importScripts("../serializer.js");
+_this.importScripts("./serializer.js");
 
 onmessage = function(e) {
     if(e.data.command == "initialize") {

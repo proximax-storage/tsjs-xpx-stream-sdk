@@ -86,7 +86,7 @@ worker.onmessage = (event)=>{
 /**
  * Encodes raw PCM data to Speex codex and stored in audio cache list
  * */
-let speexWorker = new Worker("./client/sirius-stream-sdk-client/speexWorker.js");
+let speexWorker = new Worker("./client/speexWorker.js");
 speexWorker.onmessage = (event)=>{
     audioList.push(event.data.data);
 };
