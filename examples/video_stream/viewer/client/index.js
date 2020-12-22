@@ -4,21 +4,20 @@
  *  2. initializes decoder and timer workers
  *  3. receives raw data from nodejs server
  *  4. pass the raw data to specific decoder
- *  5. after decoding, inserts decoded data to specific data list
- *  6. Timer workers of each data(audio,video) triggers basedon settings (60 FPS for video, 16000 samples per second for audio)
+ *  5. after decoding, audio is inserted on a cache list while video is rendered immediately.
+ *  6. Timer workers for audio triggers at 16000 samples per second.
  *
  *  Important note:
  *  1. Known Issue on this demo: Choppy sound, because Javascript is single threaded by nature, even if there are separate threadd
  *  to decode data, when result is passed back to main thread, it waits until it is executed, thus starving the HTML audio player causing
  *  "clunky" sound if data playedd does not reach 16000 samples.
- *  2. This demo implements basic Audio and Video synchign based on timestamp and stream time. See playFront
+ *  2. This demo implements basic Audio and Video syncing based on the video time stamp. See playFront()
  *      a. When audio is ahead, set the audio timestamp as the stream time so video can start from it.
  *      b. when audio is behind, drop/delete the audio data on the list.
- *  3. To keep the video up to date, frames behind the application stream time are dropped. See PalViewerHeadless.
+ *  3. To keep the video up to date, we prevent accepting decoding of message when decoder is busy and only process latest image.
  * */
 
-// message constants
-const VIDEO_FPS = 30;
+/** message constants */
 const MESSAGE_ID_VIEWSTREAM = 1;
 
 let viewStreamId = "";
@@ -28,12 +27,19 @@ const canvas = document.createElement("canvas");
 document.body.appendChild(canvas);
 const ctx = canvas.getContext("2d");
 
-// VIDEO cache buffer
-let videoBuffer = [];
-let incomingTimeStamp = BigInt(0);
+/** Video cache buffer */
+let currentFrame = null;
+
+/**
+ * Due to decoder inside webw orker being slow and queue messages, after decode;
+ * frames that will be displayed will be realy old, therefore we force synchronous
+ * operation to decoder and only process latest frames when it is available so frames
+ * displayed is the latest image
+ * */
+let x264DecoderReady = true;
 let videoTimeStamp = BigInt(0);
 
-// AUDIO definitions
+/** Audio definitions */
 let audio_buffer = [];
 let timestamp_cache = [];
 
@@ -46,11 +52,7 @@ let lastTime = 0;
 
 let triggered = false;
 let dataCache = [];
-
-let videoWorker = new Worker("/client/worker.js");
-videoWorker.onmessage = function (event) {
-    palViewerHeadless();
-};
+let speexDecoderReady = true;
 
 let audio_worker = new Worker("/client/worker.js");
 audio_worker.onmessage = function (event) {
@@ -70,6 +72,12 @@ audio_worker.onmessage = function (event) {
     lastTime = currTime;
 }
 
+/**
+ * Though decoder behaves synchrounously, the reason it is implemented as web worker is for
+ * separate loading of webasm glue code and prevent collision with the name "Module" from both webasm.
+ * This can be prevented by manualy loading web asm instead of using glue code, but is out of scope
+ * for this demo.
+ * */
 let h264DecoderWorker = new Worker("/client/sirius-stream-client/h264DecoderWorker.js");
 let speexDecoderWorker = new Worker("/client/sirius-stream-client/speexDecoderWorker.js");
 
@@ -86,7 +94,8 @@ h264DecoderWorker.onmessage = (event) =>{
             data: frameBuffer
         };
 
-        videoBuffer.push(frame);
+        x264DecoderReady = true;
+        palViewerHeadless(frame);
     }
 };
 
@@ -96,7 +105,6 @@ speexDecoderWorker.onmessage = (event) =>{
         // do not process audio that is behind video frame
         if(event.data.tslist[0] < videoTimeStamp) {
             console.log("Received audio is older than video timestamp");
-            return;
         }
 
         samplingRate = event.data.samplingRate;
@@ -104,6 +112,8 @@ speexDecoderWorker.onmessage = (event) =>{
 
         Array.prototype.push.apply(audio_buffer, event.data.data);
         Array.prototype.push.apply(timestamp_cache, event.data.tslist);
+
+        speexDecoderReady = true;
     }
 };
 
@@ -112,7 +122,7 @@ viewStreamId = prompt("Please enter stream ID", "");
 if(viewStreamId.length == 0){
     alert("You need to specify streamer ID to start");
 } else {
-    const WS_URL = 'ws://localhost:3003';
+    const WS_URL = 'ws://localhost:3001';
     ws = new WebSocket(WS_URL);
     ws.binaryType = "arraybuffer";
 
@@ -129,11 +139,6 @@ if(viewStreamId.length == 0){
 
         h264DecoderWorker.postMessage({command:"initialise"});
         speexDecoderWorker.postMessage({command:"initialise"});
-
-        videoWorker.postMessage({
-            command: "start",
-            payload: 1000/VIDEO_FPS
-        });
     }
 
     ws.onmessage = event => {
@@ -148,12 +153,17 @@ if(viewStreamId.length == 0){
                 let timestamp = GetUint64(data, 2);
                 let buffer = data.slice(10);
 
+                if(!x264DecoderReady)
+                    return;
+
                 h264DecoderWorker.postMessage({
                     command: "decode",
                     buffer : buffer,
                     frametype : frameType,
                     timestamp : timestamp
                 });
+
+                x264DecoderReady = false
 
                 break;
             }
@@ -167,11 +177,16 @@ if(viewStreamId.length == 0){
                 let timestamp = GetUint64(data, 1);
                 let buffer = data.slice(9);
 
+                if(!speexDecoderReady)
+                    return;
+
                 speexDecoderWorker.postMessage({
                     command: "decode",
                     buffer : buffer,
                     timestamp : timestamp
                 });
+
+                speexDecoderReady = false;
 
                 break;
             }
@@ -180,80 +195,25 @@ if(viewStreamId.length == 0){
 }
 
 /**
- * the current global play time of the video
+ * render the latest decoded frame
  * */
-let streamTime = BigInt(0);
+function palViewerHeadless(frame) {
 
-/**
- * stores the current time captured, last processing frame time
- * */
-let referenceTime = BigInt(0);
+    if(frame == null)
+        return;
 
+    let vf = frame;
 
-/**
- * Set the base point of playing the video, whether from first frame or audio time stamp
- * */
-function setTimestamps(ts_from_audio) {
-    streamTime = BigInt(ts_from_audio);
-    referenceTime = HighResolutionClock_Now();
-}
+    canvas.width = vf.width;
+    canvas.height = vf.height;
 
-/**
- * process a decoded frame and checks whether the next frame is within the current stream time
- * drops if it goes beyond tolerance
- * */
-function palViewerHeadless() {
+    let progRGB = yuv420ProgPlanarToRgb(vf.data, vf.width, vf.height);
+    const imageData = ctx.createImageData(vf.width, vf.height)
+    putRGBToRGBA(imageData.data, progRGB, vf.width, vf.height)
+    ctx.putImageData(imageData, 0, 0)
+    ctx.scale(-1, 1); // flip the image
 
-    if(videoBuffer.length <=0) return;
-
-    let frameTime = BigInt(0);
-    let frame = videoBuffer[0];
-
-    if(incomingTimeStamp == BigInt(0)) {
-        incomingTimeStamp = frame.timestamp - HighResolutionClock_nanosec(250);
-        setTimestamps(incomingTimeStamp);
-    }else{
-        incomingTimeStamp = frame.timestamp;
-    }
-
-    frameTime = videoBuffer[0].timestamp;
-    let diffTime = streamTime - frameTime;
-    let streamRate = HighResolutionClock_nanosec(1000) / 60n;
-    while(videoBuffer.length != 0 && diffTime > streamRate) {
-
-        let vf = videoBuffer.shift();
-
-        if(videoBuffer.length != 0)
-            frameTime = videoBuffer[0].timestamp;
-        else
-            frameTime = BigInt(0);
-
-        diffTime = streamTime - frameTime;
-    }
-
-    let diff = frameTime - streamTime;
-    let validDiff = (diff < streamRate && diff > -streamRate);
-
-    if(videoBuffer.length != 0 /*&& validDiff*/) {
-
-        let vf = videoBuffer.shift();
-
-        canvas.width = vf.width;
-        canvas.height = vf.height;
-
-        let progRGB = yuv420ProgPlanarToRgb(vf.data, vf.width, vf.height);
-        const imageData = ctx.createImageData(vf.width, vf.height)
-        putRGBToRGBA(imageData.data, progRGB, vf.width, vf.height)
-        ctx.putImageData(imageData, 0, 0)
-        ctx.scale(-1, 1); // flip the image
-
-        videoTimeStamp = vf.timestamp;
-    }
-
-    let now = HighResolutionClock_Now();
-    streamTime += now - referenceTime;
-    referenceTime = now;
-
+    videoTimeStamp = vf.timestamp;
 }
 
 /**
@@ -267,8 +227,10 @@ let sourceList = [];
  * */
 function playFront(count) {
 
-    // we buffer/forced latency for half a second
-    // 500 millisecond is deducted to timestamp passed by server because of audio clock time delay during audio start
+    /**
+     * we buffer/forced latency for half a second
+     * 500 millisecond is deducted to timestamp passed by server because of audio clock time delay during audio start
+     * */
     let bufferTime = 0.5;
 
     if (audio_buffer.length == 0 || count == 0 || audioContext == null) {
@@ -311,14 +273,13 @@ function playFront(count) {
             timestamp_cache = timestamp_cache.slice(index);
         }
     }
-    else if (gap < 0){
-        setTimestamps(timestamp_cache[0]);
-    }
 
-    // HTML audio adds a click sound at the end of each audio if it does not reach sampling rate (samples per second)
-    // producing a choppy sound.
-    // main  cause is frontend single thread limitation, the video processing thread is eating the CPU time of the audio decoding and
-    // filling up data when returning to main thread
+    /**
+     * HTML audio adds a click sound at the end of each audio if it does not reach sampling rate (samples per second)
+     * producing a choppy sound.
+     * main  cause is frontend single thread limitation, the video processing thread is eating the CPU time of the audio decoding and
+     * filling up data when returning to main thread
+     * */
     if(audio_buffer.length < samplingRate) {
         console.log("not enough sound audio buffer to play, length = " + audio_buffer.length +
             " expected = " + samplingRate);
@@ -336,8 +297,10 @@ function playFront(count) {
     newSource.connect(audioContext.destination);
 
     if(nextTime == 0) {
-        // we let the hardware audio clock run for some time before we start playing
-        // video should also sync with this
+        /***
+         * we let the hardware audio clock run for some time before we start playing
+         * video should also sync with this
+         * */
         nextTime = audioContext.currentTime + bufferTime;
     }
 
@@ -356,6 +319,7 @@ function playFront(count) {
             }
         }
     };
+
     nextTime += newSource.buffer.duration;
 }
 
