@@ -50,6 +50,8 @@ function createChannelAttempt(client, partnerId, callback) {
 
 describe('Sirius Stream Client test', () => {
     it('can discover nodes', function(done) {
+        this.timeout(20 * 1000);
+
         let client = new SiriusStreamClient(getConfig(env));
         connectAttempt(client, ()=>{
             expect(client.Discovery.NodeList.length).greaterThan(0);
@@ -92,7 +94,7 @@ describe('Sirius Stream Client test', () => {
     })
 
     it('can create Channel between users', async function() {
-        this.timeout(20 * 1000);
+        this.timeout(60 * 1000);
 
         let client1 = new SiriusStreamClient(getConfig(env));
         let client2 = new SiriusStreamClient(getConfig(env));
@@ -144,8 +146,6 @@ describe('Sirius Stream Client test', () => {
 
         expect(client1Presence.length).greaterThan(0);
         expect(client2Presence.length).greaterThan(0);
-
-        this.timeout(20 * 1000);
 
         let channel1Promise = new Promise(function (resolve, reject){
             // create channel from client 1 to client 2
