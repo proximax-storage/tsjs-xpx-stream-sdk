@@ -72,6 +72,15 @@ audio_worker.onmessage = function (event) {
     lastTime = currTime;
 }
 
+
+function appendLog(msg) {
+    var node = document.createElement("p");
+    var textnode = document.createTextNode(msg);
+    node.appendChild(textnode);
+
+    let chatroom = document.getElementById("chatroom");
+    chatroom.appendChild(node);
+}
 /**
  * Though decoder behaves synchrounously, the reason it is implemented as web worker is for
  * separate loading of webasm glue code and prevent collision with the name "Module" from both webasm.
@@ -104,7 +113,7 @@ speexDecoderWorker.onmessage = (event) =>{
 
         // do not process audio that is behind video frame
         if(event.data.tslist[0] < videoTimeStamp) {
-            console.log("Received audio is older than video timestamp");
+            appendLog("Received audio is older than video timestamp");
         }
 
         samplingRate = event.data.samplingRate;
@@ -127,7 +136,7 @@ if(viewStreamId.length == 0){
     ws.binaryType = "arraybuffer";
 
     ws.onopen = () => {
-        console.log(`Connected to ${WS_URL}`);
+        appendLog(`Connected to ${WS_URL}`);
 
         //  connect to server
         const message = JSON.stringify({
@@ -153,8 +162,11 @@ if(viewStreamId.length == 0){
                 let timestamp = GetUint64(data, 2);
                 let buffer = data.slice(10);
 
-                if(!x264DecoderReady)
+
+                if(!x264DecoderReady){
+                    appendLog("Received VIDEO frame with time stamp " + timestamp);
                     return;
+                }
 
                 h264DecoderWorker.postMessage({
                     command: "decode",
@@ -164,6 +176,7 @@ if(viewStreamId.length == 0){
                 });
 
                 x264DecoderReady = false
+                appendLog("Received VIDEO frame with time stamp " + timestamp + " ... for render");
 
                 break;
             }
@@ -177,8 +190,10 @@ if(viewStreamId.length == 0){
                 let timestamp = GetUint64(data, 1);
                 let buffer = data.slice(9);
 
-                if(!speexDecoderReady)
+                if(!speexDecoderReady) {
+                    appendLog("Received AUDIO frame with time stamp " + timestamp);
                     return;
+                }
 
                 speexDecoderWorker.postMessage({
                     command: "decode",
@@ -187,7 +202,7 @@ if(viewStreamId.length == 0){
                 });
 
                 speexDecoderReady = false;
-
+                appendLog("Received AUDIO frame with time stamp " + timestamp + "... queued");
                 break;
             }
         }
@@ -234,7 +249,7 @@ function playFront(count) {
     let bufferTime = 0.5;
 
     if (audio_buffer.length == 0 || count == 0 || audioContext == null) {
-        console.log("audio buffer ran out of data...");
+        appendLog("audio buffer ran out of data...");
 
         if(audioContext.state === 'running') {
             audioContext.suspend();
@@ -281,7 +296,7 @@ function playFront(count) {
      * filling up data when returning to main thread
      * */
     if(audio_buffer.length < samplingRate) {
-        console.log("not enough sound audio buffer to play, length = " + audio_buffer.length +
+        appendLog("not enough sound audio buffer to play, length = " + audio_buffer.length +
             " expected = " + samplingRate);
     }
 
