@@ -28,7 +28,7 @@ Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a fu
 
 ## License
 
-Copyright (c) 2018-2019 NEM
+Copyright (c) 2020 Proximax
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/proximax-storage/tsjs-xpx-stream-sdk
