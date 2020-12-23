@@ -36,7 +36,6 @@ let currentFrame = null;
  * operation to decoder and only process latest frames when it is available so frames
  * displayed is the latest image
  * */
-let x264DecoderReady = true;
 let videoTimeStamp = BigInt(0);
 
 /** Audio definitions */
@@ -53,25 +52,6 @@ let lastTime = 0;
 let triggered = false;
 let dataCache = [];
 let speexDecoderReady = true;
-
-let audio_worker = new Worker("/client/worker.js");
-audio_worker.onmessage = function (event) {
-   let currTime = Date.now();
-    let elapsed = (currTime - lastTime)/1000;
-
-    let emitTime = frameSize / samplingRate;
-    let secPerSample = emitTime / frameSize;
-
-    let diff = emitTime - elapsed;
-
-    let samples = Math.abs(diff) / secPerSample;
-    samples = (diff < 0)? samples : -samples;
-
-    let count = frameSize + samples;
-    playFront(count);
-    lastTime = currTime;
-}
-
 
 function appendLog(msg) {
     var node = document.createElement("p");
@@ -103,7 +83,6 @@ h264DecoderWorker.onmessage = (event) =>{
             data: frameBuffer
         };
 
-        x264DecoderReady = true;
         palViewerHeadless(frame);
     }
 };
@@ -122,7 +101,7 @@ speexDecoderWorker.onmessage = (event) =>{
         Array.prototype.push.apply(audio_buffer, event.data.data);
         Array.prototype.push.apply(timestamp_cache, event.data.tslist);
 
-        speexDecoderReady = true;
+        playFront(samplingRate);
     }
 };
 
@@ -162,21 +141,18 @@ if(viewStreamId.length == 0){
                 let timestamp = GetUint64(data, 2);
                 let buffer = data.slice(10);
 
-
-                if(!x264DecoderReady){
-                    appendLog("Received VIDEO frame with time stamp " + timestamp);
-                    return;
-                }
-
-                h264DecoderWorker.postMessage({
-                    command: "decode",
+                let frame = {
                     buffer : buffer,
                     frametype : frameType,
                     timestamp : timestamp
-                });
+                };
 
-                x264DecoderReady = false
-                appendLog("Received VIDEO frame with time stamp " + timestamp + " ... for render");
+                h264DecoderWorker.postMessage({
+                    command: "decode",
+                    buffer : frame.buffer,
+                    frametype : frame.frametype,
+                    timestamp : frame.timestamp
+                });
 
                 break;
             }
@@ -190,19 +166,12 @@ if(viewStreamId.length == 0){
                 let timestamp = GetUint64(data, 1);
                 let buffer = data.slice(9);
 
-                if(!speexDecoderReady) {
-                    appendLog("Received AUDIO frame with time stamp " + timestamp);
-                    return;
-                }
-
                 speexDecoderWorker.postMessage({
                     command: "decode",
                     buffer : buffer,
                     timestamp : timestamp
                 });
 
-                speexDecoderReady = false;
-                appendLog("Received AUDIO frame with time stamp " + timestamp + "... queued");
                 break;
             }
         }
