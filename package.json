@@ -1,6 +1,6 @@
 {
   "name": "tsjs-xpx-stream-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "ProximaX Sirius Stream sdk for typescript and javascript",
   "license": "Apache-2.0",
   "main": "dist/index.js",
