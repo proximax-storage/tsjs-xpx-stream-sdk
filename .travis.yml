@@ -9,7 +9,7 @@ cache:
 before_script:
   - npm run build
 script:
-  - node_version=$(node -v); if [ ${node_version:1:2} = 12 ]; then npm run test:coveralls; else npm run test; fi
+  - node_version=$(node -v); if [ ${node_version:1:2} = 12 ]; then npm run test; fi
 deploy:
   provider: npm
   skip-cleanup: true
