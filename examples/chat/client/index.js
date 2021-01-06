@@ -1,5 +1,5 @@
 
-let socket = io.connect('http://localhost:3000/');
+let socket = io.connect(IO_URL);
 let logged_in = false;
 let chat_mate = null;
 
