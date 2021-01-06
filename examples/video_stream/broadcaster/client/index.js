@@ -95,7 +95,6 @@ speexWorker.onmessage = (event)=>{
  * Connects to nodejs server, and perform initial capture after 3 seconds
  * */
 function start() {
-    const WS_URL = 'ws://localhost:3001';
     ws = new WebSocket(WS_URL);
     ws.binaryType = "arraybuffer";
 
