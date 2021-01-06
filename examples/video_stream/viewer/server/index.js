@@ -92,6 +92,10 @@ app.get('/client/index.js',function(req,res){
     res.sendFile(path.resolve(__dirname, '../client/index.js'));
 });
 
+app.get('/client/config.js',function(req,res){
+    res.sendFile(path.resolve(__dirname, '../client/config.js'));
+});
+
 app.get('/client/yuv.js',function(req,res){
     res.sendFile(path.resolve(__dirname, '../../common/yuv.js'));
 });
