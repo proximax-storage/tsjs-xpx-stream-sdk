@@ -110,7 +110,6 @@ viewStreamId = prompt("Please enter stream ID", "");
 if(viewStreamId.length == 0){
     alert("You need to specify streamer ID to start");
 } else {
-    const WS_URL = 'ws://localhost:3001';
     ws = new WebSocket(WS_URL);
     ws.binaryType = "arraybuffer";
 
